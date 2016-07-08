@@ -9,7 +9,7 @@ public class Informator {
         ArrayList<String> params = new ArrayList<String>();
 //        ("OS", "IE", "Chrome", "Firefox", "Java", "NET")
         params.add("OS");
-        params.add("IE");
+        params.add("Java");
         String pcData = PCDataGrabber.getInstance().getPCdata(params);
         ClipboardAccess.getInstance().copyToClipboard(pcData);
     }
