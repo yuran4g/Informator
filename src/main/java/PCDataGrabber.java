@@ -37,7 +37,7 @@ public class PCDataGrabber {
         String result = "PC Configuration:\n";
         for (String param : params) {
             if (param.equals("OS")) result = result + "OS version: " + getOSVersion() + "\n";
-
+            if (param.equals("Java")) result = result + "Java version: " + getJavaVersion().get(0) + "\n";
         }
         return result;
     }
@@ -51,28 +51,22 @@ public class PCDataGrabber {
     }
 
     private ArrayList<String> executeScript(String commands) {
-        Runtime rt = Runtime.getRuntime();
-        Process proc = null;
-        try {
-            proc = rt.exec(commands);
-        } catch (IOException e) {
-            System.out.println("Can not execute script = " + commands);
-        }
-        BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-        BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-        System.out.println("Here is the standard output of the command:\n");
-        String s;
         ArrayList<String> result = new ArrayList<String>();
+
+        String line;
         try {
-            int i = 0;
-            while ((s = stdInput.readLine()) != null) {
-                result.add(s);
-                i = i + 1;
-                System.out.println(s);
+            Process p = Runtime.getRuntime().exec(commands);
+            BufferedReader input = new BufferedReader
+                    (new InputStreamReader(p.getInputStream()));
+            while ((line = input.readLine()) != null) {
+                result.add(line);
             }
-        } catch (IOException e) {
-            System.out.println("Can not get output of script = " + commands);
+            input.close();
         }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         return result;
     }
 }

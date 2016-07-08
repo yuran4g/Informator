@@ -42,6 +42,11 @@ public final class Properties {
                 userProperties = allProperties;
             }
         }
+        else{
+           setUserProperties(allProperties);
+        }
+
+
     }
 
     public void saveUserProperties() {
