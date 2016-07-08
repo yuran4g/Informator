@@ -1,12 +1,12 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by yksenofontov on 08.07.2016.
  */
 public final class Properties {
     private static Properties instance = null;
-    private final static String PROPERTIES_FILE = "properties.txt";
 
     private Properties() {
     }
@@ -18,15 +18,17 @@ public final class Properties {
         return instance;
     }
 
+    private final static String PROPERTIES_FILE = "properties.txt";
 
-    public final static String[] allProperties = {"OS", "IE", "Chrome", "Firefox", "Java", "NET"};
-    private String[] userProperties;
+    public final static ArrayList<String> allProperties = new ArrayList<String>(Arrays.asList("OS", "IE", "Chrome", "Firefox", "Java", "NET"));
 
-    public String[] getUserProperties() {
+    private ArrayList<String> userProperties;
+
+    public ArrayList<String> getUserProperties() {
         return userProperties;
     }
 
-    public void setUserProperties(String[] userProperties) {
+    public void setUserProperties(ArrayList<String> userProperties) {
         this.userProperties = userProperties;
     }
 
@@ -45,8 +47,8 @@ public final class Properties {
     public void saveUserProperties() {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(PROPERTIES_FILE));
-            for (int i = 0; i < allProperties.length; i++) {
-                writer.write(allProperties[i] + " \n");
+            for (String prop: allProperties) {
+                writer.write(prop + " \n");
             }
             writer.close();
         } catch (IOException e) {
