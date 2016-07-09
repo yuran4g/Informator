@@ -49,7 +49,7 @@ public class PCDataGrabber {
     }
 
     private String getJavaVersion() {
-        return "";
+        return System.getProperty("java.version");
     }
 
     private String getNETVersion() {
