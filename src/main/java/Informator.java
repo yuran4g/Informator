@@ -79,11 +79,4 @@ public class Informator extends JFrame {
             Properties.getInstance().setUserProperties(params);
         }
     }
-//
-//    readProperties
-//
-//    saveProperties
-//     getPCData
-//
-//    CopyToClipboard
 }

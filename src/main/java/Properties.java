@@ -45,8 +45,6 @@ public final class Properties {
         else{
            setUserProperties(allProperties);
         }
-
-
     }
 
     public void saveUserProperties() {

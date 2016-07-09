@@ -27,8 +27,6 @@ public class PCDataGrabber {
         return grabbedData;
     }
 
-    private final static String JAVA_SCRIPT = "java -version";
-
     private void setGrabbedData(String grabbedData) {
         PCDataGrabber.grabbedData.add(grabbedData);
     }
@@ -37,7 +35,10 @@ public class PCDataGrabber {
         String result = "PC Configuration:\n";
         for (String param : params) {
             if (param.equals("OS")) result = result + "OS version: " + getOSVersion() + "\n";
-            if (param.equals("Java")) result = result + "Java version: " + getJavaVersion().get(0) + "\n";
+//            if (param.equals("Java")) result = result + "Java version: " + getJavaVersion() + "\n";
+            if (param.equals("IE")) result = result + "IE version: " + getIEVersion() + "\n";
+            if (param.equals("NET")) result = result + "NET: " +getNETVersion();
+
         }
         return result;
     }
@@ -46,16 +47,33 @@ public class PCDataGrabber {
         return System.getProperty("os.name");
     }
 
-    private ArrayList<String> getJavaVersion() {
-        return executeScript(JAVA_SCRIPT);
+    private String getJavaVersion() {
+        ProcessBuilder builder = new ProcessBuilder("java", "-version");
+        return executeScript(builder).get(0);
     }
 
-    private ArrayList<String> executeScript(String commands) {
+    private String getNETVersion() {
+        ProcessBuilder builder = new ProcessBuilder("wmic","product","get","description");
+        ArrayList<String> script_output = executeScript(builder);
+        String results = "\n";
+        for (String result: script_output) {
+            if (result.contains(".NET Framework")) results= results+"- "+result.trim() + "\n";
+        }
+        return results;
+    }
+
+    private String getIEVersion() {
+        ProcessBuilder builder = new ProcessBuilder("reg", "query","HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Internet Explorer\\","/v","svcVersion");
+        String[] a = executeScript(builder).get(2).split(" ");
+        return a[a.length-1];
+    }
+
+    private ArrayList<String> executeScript(ProcessBuilder builder) {
         ArrayList<String> result = new ArrayList<String>();
 
         String line;
         try {
-            Process p = Runtime.getRuntime().exec(commands);
+            Process p = builder.start();
             BufferedReader input = new BufferedReader
                     (new InputStreamReader(p.getInputStream()));
             while ((line = input.readLine()) != null) {
@@ -66,7 +84,6 @@ public class PCDataGrabber {
         catch (Exception ex) {
             ex.printStackTrace();
         }
-
         return result;
     }
 }
