@@ -73,8 +73,12 @@ public class PCDataGrabber {
     }
 
     private String getChromeVersion() {
-        return "";
-    }
+//        need to check at different OS versions
+        ProcessBuilder builder = new ProcessBuilder("reg", "query","HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Google Chrome","/v","Version");
+        String[] a = executeScript(builder).get(2).split(" ");
+        return a[a.length-1];
+
+}
 
     private ArrayList<String> executeScript(ProcessBuilder builder) {
         ArrayList<String> result = new ArrayList<String>();
