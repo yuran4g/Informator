@@ -1,3 +1,5 @@
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -69,7 +71,14 @@ public class PCDataGrabber {
     }
 
     private String getFirefoxVersion() {
-        return "";
+//        need to check at different OS versions
+        ProcessBuilder builder = new ProcessBuilder("reg", "query","HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Mozilla\\Mozilla Firefox","/v","CurrentVersion");
+        String[] a = executeScript(builder).get(2).split(" ");
+        String result = "";
+        for (int i=0; i<10;i++){
+            a = ArrayUtils.removeElement(a, "");
+        }
+        return a[2];
     }
 
     private String getChromeVersion() {
