@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicCheckBoxMenuItemUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 public class Informator extends JFrame {
     int left,top,dy,dx;
     boolean pressed;
+    JPopupMenu menu;
     ArrayList<String> params;
     public Informator() {
         setLayout(null);
@@ -37,13 +40,30 @@ public class Informator extends JFrame {
         setAlwaysOnTop(true);
         add(jp);
         setVisible(true);
+        menu = new JPopupMenu();
+        JMenuItem menuItem;
+        JCheckBoxMenuItem cbMenuItem;
+        for (String pr:Properties.allProperties) {
+            cbMenuItem = new JCheckBoxMenuItem(pr);
+            if (params.contains(pr)) cbMenuItem.setSelected(true);
+            else cbMenuItem.setSelected(false);
+            cbMenuItem.addActionListener(new CBActionListener());
+            cbMenuItem.setUI(new StayOpenCheckBoxMenuItemUI());
+            menu.add(cbMenuItem);
+        }
+        menuItem = new JMenuItem("Exit");
+        menuItem.addActionListener(new ActionListener()  {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        menu.add(menuItem);
     }
     private class CBActionListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
-            String p = e.getActionCommand();
-            boolean state = ((AbstractButton)e.getSource()).getModel().isSelected();
-            if (state) params.add(p);
-            else params.remove(p);
+            menu.setVisible(true);
+            if (((AbstractButton)e.getSource()).getModel().isSelected()) params.add(e.getActionCommand());
+            else params.remove(e.getActionCommand());
             Properties.getInstance().setUserProperties(params);
         }
     }
@@ -75,23 +95,6 @@ public class Informator extends JFrame {
                 ClipboardAccess.getInstance().copyToClipboard(t);
             }
             else if (e.getButton()==3){
-                JPopupMenu menu = new JPopupMenu();
-                JMenuItem menuItem;
-                JCheckBoxMenuItem cbMenuItem;
-                for (String pr:Properties.allProperties) {
-                    cbMenuItem = new JCheckBoxMenuItem(pr);
-                    if (params.contains(pr)) cbMenuItem.setSelected(true);
-                    else cbMenuItem.setSelected(false);
-                    cbMenuItem.addActionListener(new CBActionListener());
-                    menu.add(cbMenuItem);
-                }
-                menuItem = new JMenuItem("Exit");
-                menuItem.addActionListener(new ActionListener()  {
-                    public void actionPerformed(ActionEvent e) {
-                        System.exit(0);
-                    }
-                });
-                menu.add(menuItem);
                 menu.setVisible(true);
                 menu.show(e.getComponent(),e.getX(),e.getY());
             }
@@ -104,4 +107,16 @@ public class Informator extends JFrame {
 //     getPCData
 //
 //    CopyToClipboard
+}
+
+class StayOpenCheckBoxMenuItemUI extends BasicCheckBoxMenuItemUI {
+
+    @Override
+    protected void doClick(MenuSelectionManager msm) {
+        menuItem.doClick(0);
+    }
+
+    public static ComponentUI createUI(JComponent c) {
+        return new StayOpenCheckBoxMenuItemUI();
+    }
 }
