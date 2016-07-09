@@ -41,7 +41,7 @@ public class PCDataGrabber {
             if (param.equals("IE")) result = result + "IE version: " + getIEVersion() + "\n";
             if (param.equals("Chrome")) result = result + "Chrome version: " + getChromeVersion() + "\n";
             if (param.equals("Firefox")) result = result + "Firefox version: " + getFirefoxVersion() + "\n";
-            if (param.equals("NET")) result = result + "NET: " +getNETVersion();
+            if (param.equals("NET")) result = result + "NET: " + getNETVersion();
         }
         return result;
     }
@@ -55,39 +55,55 @@ public class PCDataGrabber {
     }
 
     private String getNETVersion() {
-        ProcessBuilder builder = new ProcessBuilder("wmic","product","get","description");
-        ArrayList<String> script_output = executeScript(builder);
-        String results = "\n";
-        for (String result: script_output) {
-            if (result.contains(".NET Framework")) results= results+"- "+result.trim() + "\n";
+        try {
+            ProcessBuilder builder = new ProcessBuilder("wmic", "product", "get", "description");
+            ArrayList<String> script_output = executeScript(builder);
+            String results = "\n";
+            for (String result : script_output) {
+                if (result.contains(".NET Framework")) results = results + "- " + result.trim() + "\n";
+            }
+            return results;
+        } catch (Exception e) {
+            return "";
         }
-        return results;
     }
 
     private String getIEVersion() {
-        ProcessBuilder builder = new ProcessBuilder("reg", "query","HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Internet Explorer\\","/v","svcVersion");
-        String[] a = executeScript(builder).get(2).split(" ");
-        return a[a.length-1];
+        try {
+            ProcessBuilder builder = new ProcessBuilder("reg", "query", "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Internet Explorer\\", "/v", "svcVersion");
+            String[] a = executeScript(builder).get(2).split(" ");
+            return a[a.length - 1];
+        } catch (Exception e) {
+            return "";
+        }
+
     }
 
     private String getFirefoxVersion() {
 //        need to check at different OS versions
-        ProcessBuilder builder = new ProcessBuilder("reg", "query","HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Mozilla\\Mozilla Firefox","/v","CurrentVersion");
-        String[] a = executeScript(builder).get(2).split(" ");
-        String result = "";
-        for (int i=0; i<10;i++){
-            a = ArrayUtils.removeElement(a, "");
+        try {
+            ProcessBuilder builder = new ProcessBuilder("reg", "query", "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Mozilla\\Mozilla Firefox", "/v", "CurrentVersion");
+            String[] a = executeScript(builder).get(2).split(" ");
+            String result = "";
+            for (int i = 0; i < 10; i++) {
+                a = ArrayUtils.removeElement(a, "");
+            }
+            return a[2];
+        } catch (Exception e) {
+            return "";
         }
-        return a[2];
     }
 
     private String getChromeVersion() {
 //        need to check at different OS versions
-        ProcessBuilder builder = new ProcessBuilder("reg", "query","HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Google Chrome","/v","Version");
-        String[] a = executeScript(builder).get(2).split(" ");
-        return a[a.length-1];
-
-}
+        try {
+            ProcessBuilder builder = new ProcessBuilder("reg", "query", "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Google Chrome", "/v", "Version");
+            String[] a = executeScript(builder).get(2).split(" ");
+            return a[a.length - 1];
+        } catch (Exception e) {
+            return "";
+        }
+    }
 
     private ArrayList<String> executeScript(ProcessBuilder builder) {
         ArrayList<String> result = new ArrayList<String>();
@@ -101,8 +117,7 @@ public class PCDataGrabber {
                 result.add(line);
             }
             input.close();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return result;
