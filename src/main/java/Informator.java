@@ -105,26 +105,30 @@ public class Informator extends JFrame {
             pressed = false;
         }
 
+        private void showTooltip(MouseEvent e,String message){
+            JComponent component = (JComponent)e.getSource();
+            component.setToolTipText(message);
+            MouseEvent phantom = new MouseEvent(
+                    component,
+                    MouseEvent.MOUSE_MOVED,
+                    System.currentTimeMillis(),
+                    0,
+                    0,
+                    0,
+                    0,
+                    false);
+            ToolTipManager.sharedInstance().mouseMoved(phantom);
+        }
         public void mouseClicked(MouseEvent e) {
             ///1-left,3-right
             if (e.getButton() == 1) {
                 if (ready) {
                     String grabbedData = PCDataGrabber.getGrabbedData(params);
                     ClipboardAccess.getInstance().copyToClipboard(grabbedData);
+                    showTooltip(e,"Done");
                 }
                 else {
-                    JComponent component = (JComponent)e.getSource();
-                    component.setToolTipText("Data isn't ready");
-                    MouseEvent phantom = new MouseEvent(
-                            component,
-                            MouseEvent.MOUSE_MOVED,
-                            System.currentTimeMillis(),
-                            0,
-                            0,
-                            0,
-                            0,
-                            false);
-                    ToolTipManager.sharedInstance().mouseMoved(phantom);
+                    showTooltip(e,"Data isn't ready");
                 }
             } else if (e.getButton() == 3) {
                 menu.setVisible(true);

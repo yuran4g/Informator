@@ -33,12 +33,30 @@ public class PCDataGrabber {
     public void grabData(ArrayList<String> params) {
         HashMap<String,String> result = new HashMap<String,String>();
         for (String param : params) {
-            if (param.equals("OS")) result.put("OS","OS version: " + getOSVersion() + "\n");
-            if (param.equals("Java")) result.put("Java","Java version: " + getJavaVersion() + "\n");
-            if (param.equals("IE")) result.put("IE","IE version: " + getIEVersion() + "\n");
-            if (param.equals("Chrome")) result.put("Chrome","Chrome version: " + getChromeVersion() + "\n");
-            if (param.equals("Firefox")) result.put("Firefox","Firefox version: " + getFirefoxVersion() + "\n");
-            if (param.equals("NET")) result.put("NET","NET: " + getNETVersion());
+            if (param.equals("OS")) {
+                String data = getOSVersion();
+                if (!data.equals("")) result.put("OS","OS version: " + data + "\n");
+            }
+            if (param.equals("Java")){
+                String data = getJavaVersion();
+                if (!data.equals("")) result.put("Java","Java version: " + data + "\n");
+            }
+            if (param.equals("IE")){
+                String data = getIEVersion();
+                if (!data.equals("")) result.put("IE","IE version: " + data + "\n");
+            }
+            if (param.equals("Chrome")){
+                String data = getChromeVersion();
+                if (!data.equals("")) result.put("Chrome","Chrome version: " + data + "\n");
+            }
+            if (param.equals("Firefox")){
+                String data = getFirefoxVersion();
+                if (!data.equals("")) result.put("Firefox","Firefox version: " + data + "\n");
+            }
+            if (param.equals("NET")){
+                String data = getNETVersion();
+                if (!data.equals("")) result.put("NET","NET: " + data);
+            }
         }
         grabbedData = result;
     }
