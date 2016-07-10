@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Informator extends JFrame {
     int left, top, dy, dx;
     boolean pressed, ready;
-    JPopupMenu menu;
+    static JPopupMenu menu;
     ArrayList<String> params;
 
     public Informator() {
@@ -41,6 +41,24 @@ public class Informator extends JFrame {
         setAlwaysOnTop(true);
         add(jp);
         setVisible(true);
+        initMenu();
+        Thread thread = new Thread(new Runnable() {
+            public void run() {
+                while (true) {
+                    PCDataGrabber.getInstance().grabData(Properties.allProperties);
+                    ready = true;
+                    jl.setIcon(new ImageIcon(new ImageIcon("resources\\images.png").getImage().getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)));
+                    try {
+                        Thread.sleep(300000);//reload data every 5min
+                    } catch (InterruptedException e) {
+                        System.out.println("Can not sleep the thread");
+                    }
+                }
+            }
+        });
+        thread.start();
+    }
+    private void initMenu(){???????????
         menu = new JPopupMenu();
         JMenuItem menuItem;
         JCheckBoxMenuItem cbMenuItem;
@@ -59,23 +77,7 @@ public class Informator extends JFrame {
             }
         });
         menu.add(menuItem);
-        Thread thread = new Thread(new Runnable() {
-            public void run() {
-                while (true) {
-                    PCDataGrabber.getInstance().grabData(Properties.allProperties);
-                    ready = true;
-                    jl.setIcon(new ImageIcon(new ImageIcon("resources\\images.png").getImage().getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)));
-                    try {
-                        Thread.sleep(300000);//reload data every 5min
-                    } catch (InterruptedException e) {
-                        System.out.println("Can not sleep the thread");
-                    }
-                }
-            }
-        });
-        thread.start();
     }
-
     private class CBActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             menu.setVisible(true);
@@ -131,6 +133,7 @@ public class Informator extends JFrame {
                     showTooltip(e,"Data isn't ready");
                 }
             } else if (e.getButton() == 3) {
+                initMenu(???);
                 menu.setVisible(true);
                 menu.show(e.getComponent(), e.getX(), e.getY());
             }
