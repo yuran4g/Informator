@@ -24,7 +24,7 @@ public class Informator extends JFrame {
         setUndecorated(true);
         setBackground(new Color(0, 0, 0, 0));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        final JLabel jl = new JLabel(new ImageIcon(new ImageIcon("resources\\reload.png").getImage().getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)));
+        final JLabel jl = new JLabel(new ImageIcon(new ImageIcon("resources\\Red_icon.png").getImage().getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)));
         jl.setVisible(true);
         jl.setBounds(0, 0, 30, 30);
         JPanel jp = new JPanel(null);
