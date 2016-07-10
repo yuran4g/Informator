@@ -20,6 +20,10 @@ public class PCDataGrabber {
         return instance;
     }
 
+    public static boolean Contains(String param){
+        return grabbedData.containsKey(param);
+    }
+
     private static HashMap<String,String> grabbedData;
 
     public static String getGrabbedData(ArrayList<String> params) {
