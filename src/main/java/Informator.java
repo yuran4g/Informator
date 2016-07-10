@@ -13,7 +13,6 @@ public class Informator extends JFrame {
     boolean pressed, ready;
     JPopupMenu menu;
     ArrayList<String> params;
-    String gr;///////////////////////////////////
 
     public Informator() {
         setLayout(null);
@@ -62,9 +61,16 @@ public class Informator extends JFrame {
         menu.add(menuItem);
         Thread thread = new Thread(new Runnable() {
             public void run() {
-                gr = PCDataGrabber.getInstance().getPCdata(params);///Изменить(нужен метод в PCDataGrabber)
-                ready = true;
-                jl.setIcon(new ImageIcon(new ImageIcon("resources\\images.png").getImage().getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)));
+                while (true) {
+                    PCDataGrabber.getInstance().grabData(Properties.allProperties);
+                    ready = true;
+                    jl.setIcon(new ImageIcon(new ImageIcon("resources\\images.png").getImage().getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)));
+                    try {
+                        Thread.sleep(300000);//reload data every 5min
+                    } catch (InterruptedException e) {
+                        System.out.println("Can not sleep the thread");
+                    }
+                }
             }
         });
         thread.start();
@@ -102,7 +108,10 @@ public class Informator extends JFrame {
         public void mouseClicked(MouseEvent e) {
             ///1-left,3-right
             if (e.getButton() == 1) {
-                if (ready) ClipboardAccess.getInstance().copyToClipboard(gr);
+                if (ready) {
+                    String grabbedData = PCDataGrabber.getGrabbedData(params);
+                    ClipboardAccess.getInstance().copyToClipboard(grabbedData);
+                }
                 else {
                     JComponent component = (JComponent)e.getSource();
                     component.setToolTipText("Data isn't ready");

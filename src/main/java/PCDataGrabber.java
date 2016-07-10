@@ -1,11 +1,8 @@
 import org.apache.commons.lang3.ArrayUtils;
-
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
-import static com.sun.corba.se.spi.activation.IIOP_CLEAR_TEXT.value;
+import java.util.HashMap;
 
 /**
  * Created by yksenofontov on 08.07.2016.
@@ -23,27 +20,27 @@ public class PCDataGrabber {
         return instance;
     }
 
-    private static ArrayList<String> grabbedData;
+    private static HashMap<String,String> grabbedData;
 
-    public static ArrayList<String> getGrabbedData() {
-        return grabbedData;
-    }
-
-    private void setGrabbedData(String grabbedData) {
-        PCDataGrabber.grabbedData.add(grabbedData);
-    }
-
-    public String getPCdata(ArrayList<String> params) {
+    public static String getGrabbedData(ArrayList<String> params) {
         String result = "PC Configuration:\n";
         for (String param : params) {
-            if (param.equals("OS")) result = result + "OS version: " + getOSVersion() + "\n";
-            if (param.equals("Java")) result = result + "Java version: " + getJavaVersion() + "\n";
-            if (param.equals("IE")) result = result + "IE version: " + getIEVersion() + "\n";
-            if (param.equals("Chrome")) result = result + "Chrome version: " + getChromeVersion() + "\n";
-            if (param.equals("Firefox")) result = result + "Firefox version: " + getFirefoxVersion() + "\n";
-            if (param.equals("NET")) result = result + "NET: " + getNETVersion();
+            result = result + grabbedData.get(param);
         }
         return result;
+    }
+
+    public void grabData(ArrayList<String> params) {
+        HashMap<String,String> result = new HashMap<String,String>();
+        for (String param : params) {
+            if (param.equals("OS")) result.put("OS","OS version: " + getOSVersion() + "\n");
+            if (param.equals("Java")) result.put("Java","Java version: " + getJavaVersion() + "\n");
+            if (param.equals("IE")) result.put("IE","IE version: " + getIEVersion() + "\n");
+            if (param.equals("Chrome")) result.put("Chrome","Chrome version: " + getChromeVersion() + "\n");
+            if (param.equals("Firefox")) result.put("Firefox","Firefox version: " + getFirefoxVersion() + "\n");
+            if (param.equals("NET")) result.put("NET","NET: " + getNETVersion());
+        }
+        grabbedData = result;
     }
 
     private String getOSVersion() {
