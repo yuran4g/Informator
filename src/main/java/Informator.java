@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicCheckBoxMenuItemUI;
 import java.awt.*;
 import java.awt.event.*;
@@ -13,7 +12,9 @@ public class Informator extends JFrame {
     private boolean pressed, ready;
     private static JPopupMenu menu;
     private static ArrayList<String> params;
-    private static JLabel jl;
+    private static JLabel jl = new JLabel();
+
+    private static final int IMAGE_WIDTH = 30,IMAGE_HEIGHT=30;
 
     public Informator() {
         createUI();
@@ -25,7 +26,7 @@ public class Informator extends JFrame {
                     PCDataGrabber.getInstance().grabData(Properties.allProperties);
                     ready = true;
                     Check();
-                    jl.setIcon(new ImageIcon(new ImageIcon("resources\\images.png").getImage().getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)));
+                    jl.setIcon(scaledIcon("resources\\images.png"));
                     try {
                         Thread.sleep(300000);//reload data every 5min
                     } catch (InterruptedException e) {
@@ -43,23 +44,31 @@ public class Informator extends JFrame {
         left = (int) screenSize.getWidth();
         top = (int) screenSize.getHeight();
         setLocation(left - 40, top - 80);
-        setSize(30, 30);
+        setSize(IMAGE_WIDTH, IMAGE_HEIGHT);
         setUndecorated(true);
         setBackground(new Color(0, 0, 0, 0));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        jl = new JLabel(new ImageIcon(new ImageIcon("resources\\Red_icon.png").getImage().getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH)));
+        setAlwaysOnTop(true);
+        add(createIconPanel());
+        setVisible(true);
+    }
+
+    private ImageIcon scaledIcon(String path){
+        return new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(IMAGE_WIDTH, IMAGE_HEIGHT, java.awt.Image.SCALE_SMOOTH));
+    }
+
+    private JPanel createIconPanel(){
+        jl.setIcon(scaledIcon("resources\\Red_icon.png"));
         jl.setVisible(true);
-        jl.setBounds(0, 0, 30, 30);
+        jl.setBounds(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
         JPanel jp = new JPanel(null);
         jp.setVisible(true);
-        jp.setBounds(0, 0, 30, 30);
+        jp.setBounds(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
         jp.setOpaque(false);
         jp.add(jl);
         jp.addMouseListener(new MyMouseAdapter());
         jp.addMouseMotionListener(new MyMouseMotionAdapter());
-        setAlwaysOnTop(true);
-        add(jp);
-        setVisible(true);
+        return jp;
     }
 
     private void initMenu(){

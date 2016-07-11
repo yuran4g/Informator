@@ -101,7 +101,8 @@ public class PCDataGrabber {
     private String getFirefoxVersion() {
 //        need to check at different OS versions
         try {
-            ProcessBuilder builder = new ProcessBuilder("reg", "query", "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Mozilla\\Mozilla Firefox", "/v", "CurrentVersion");
+            //ProcessBuilder builder = new ProcessBuilder("reg", "query", "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Mozilla\\Mozilla Firefox", "/v", "CurrentVersion");
+            ProcessBuilder builder = new ProcessBuilder("reg", "query", "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\mozilla.org\\Mozilla", "/v", "CurrentVersion");
             String[] a = executeScript(builder).get(2).split(" ");
             String result = "";
             for (int i = 0; i < 10; i++) {
