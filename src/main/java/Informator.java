@@ -66,7 +66,7 @@ public class Informator extends JFrame {
         jp.setBounds(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
         jp.setOpaque(false);
         jp.add(jl);
-        jp.addMouseListener(new MyMouseAdapter());
+        jp.addMouseListener(new TooltipListener());
         jp.addMouseMotionListener(new MyMouseMotionAdapter());
         return jp;
     }
@@ -123,7 +123,40 @@ public class Informator extends JFrame {
         }
     }
 
-    private class MyMouseAdapter extends MouseAdapter {
+    private class TooltipListener implements MouseListener{
+        public void mouseEntered(MouseEvent e){
+            if(ready) showTooltip(e,"Done");
+            else showTooltip(e,"Data isn't ready");
+        }
+
+        public void mouseExited(MouseEvent e){
+            hideTooltip();
+        }
+
+        private void showTooltip(MouseEvent e,String message) {
+            JComponent component = (JComponent) e.getSource();
+            component.setToolTipText(message);
+            MouseEvent phantom = new MouseEvent(component, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, 0, 0, 0, false);
+            ToolTipManager.sharedInstance().setEnabled(true);
+            ToolTipManager.sharedInstance().mouseMoved(phantom);
+        }
+
+        private void hideTooltip(){
+            ToolTipManager.sharedInstance().setEnabled(false);
+        }
+
+        public void mouseClicked(MouseEvent e) {
+            ///1-left,3-right
+            if (e.getButton() == 1) {
+                if (!ready) return;
+                String grabbedData = PCDataGrabber.getGrabbedData(params);
+                ClipboardAccess.getInstance().copyToClipboard(grabbedData);
+            } else if (e.getButton() == 3) {
+                menu.setVisible(true);
+                menu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        }
+
         public void mousePressed(MouseEvent e) {
             if (e.getButton()!=1) return;
             dy = e.getY();
@@ -133,30 +166,6 @@ public class Informator extends JFrame {
 
         public void mouseReleased(MouseEvent e) {
             pressed = false;
-        }
-
-        private void showTooltip(MouseEvent e,String message) {
-            JComponent component = (JComponent) e.getSource();
-            component.setToolTipText(message);
-            MouseEvent phantom = new MouseEvent(component, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, 0, 0, 0, false);
-            ToolTipManager.sharedInstance().mouseMoved(phantom);
-        }
-
-        public void mouseClicked(MouseEvent e) {
-            ///1-left,3-right
-            if (e.getButton() == 1) {
-                if (ready) {
-                    String grabbedData = PCDataGrabber.getGrabbedData(params);
-                    ClipboardAccess.getInstance().copyToClipboard(grabbedData);
-                    showTooltip(e,"Done");
-                }
-                else {
-                    showTooltip(e,"Data isn't ready");
-                }
-            } else if (e.getButton() == 3) {
-                menu.setVisible(true);
-                menu.show(e.getComponent(), e.getX(), e.getY());
-            }
         }
     }
 }

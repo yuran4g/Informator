@@ -3,7 +3,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 /**
  * Created by yksenofontov on 08.07.2016.
@@ -62,6 +61,10 @@ public class PCDataGrabber {
                 String data = getNETVersion();
                 if (!data.equals("")) result.put("NET","NET: " + data);
             }
+            if (param.equals("User")){
+                String data = getUserName();
+                if (!data.equals("")) result.put("User","User: " + data);
+            }
         }
         grabbedData = result;
     }
@@ -75,24 +78,36 @@ public class PCDataGrabber {
     }
 
     private String getNETVersion() {
-        String results = "";
-        try {
-            ProcessBuilder builder = new ProcessBuilder("wmic", "product", "get", "description");
-            ArrayList<String> script_output = executeScript(builder);
-            results = "\n";
-            for (String result : script_output) {
-                if (result.contains(".NET Framework")) results = results + "- " + result.trim() + "\n";
-            }
-            builder = new ProcessBuilder("reg", "query", "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full", "/v", "Release");
-            String s = executeScript(builder).get(2).trim().split(" ")[8];
-            if (s.equals("0x6004f") | s.equals("0x60051")) results = results + "- Microsoft .NET Framework 4.6" + "\n";
-            else if (s.equals("0x6040e") | s.equals("0x6041f")) results = results + "- Microsoft .NET Framework 4.6.1" + "\n";
-            results = matchAndReplaceChars(results);
-            return results;
-        } catch (Exception e) {
+        String results = "\n";
+        reg[] regs = {
+                new reg("HKLM\\Software\\Microsoft\\Active Setup\\Installed Components\\{78705f0d-e8db-4b2d-8193-982bdda15ecd}","Version","","1.0","HKLM\\Software\\Microsoft\\Active Setup\\Installed Components\\{78705f0d-e8db-4b2d-8193-982bdda15ecd}","Version"),
+                new reg("HKLM\\Software\\Microsoft\\Active Setup\\Installed Components\\{FDC11A6F-17D1-48f9-9EA3-9051954BAA24}","Version","","1.0","HKLM\\Software\\Microsoft\\Active Setup\\Installed Components\\{FDC11A6F-17D1-48f9-9EA3-9051954BAA24}","Version"),
+                new reg("HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v1.1.4322","","","1.1","HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v1.1.4322","SP"),
+                new reg("HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727","Version","","2.0","HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727","SP"),
+                new reg("HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727","Increment","","2.0 Original Release (RTM)","HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727","SP"),
+                new reg("HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v3.0","Version","","3.0","HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v3.0","SP"),
+                new reg("HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v3.5","Version","","3.5","HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v3.5","SP"),
+                new reg("HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v4\\Client","Version","","4.0 Client Profile","HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v4\\Client","Servicing"),
+                new reg("HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Version","","4.0 Full Profile","HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Servicing"),
+                new reg("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Release","0x6004f","4.6","HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Servicing"),
+                new reg("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Release","0x60051","4.6","HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Servicing"),
+                new reg("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Release","0x6040e","4.6.1","HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Servicing"),
+                new reg("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Release","0x6041f","4.6.1","HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Servicing")};
+        for (reg r:regs){
+            try {
+                ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
+                String s = executeScript(builder).get(2).trim().split(" ")[8];
+                if (s.contains(r.getValue()))results+="- Microsoft .NET Framework "+r.getVersion()+" ";
+                else continue;
+                builder = new ProcessBuilder("reg", "query", r.getPathSP(), "/v", r.getKeySP());
+                s = executeScript(builder).get(2).trim().split(" ")[8];
+                if (!s.equals("0x0"))results+="SP"+s.replaceAll("^0x","")+"\n";
+                else results+="\n";
+            } catch (Exception e) {
 
+            }
         }
-        return results;
+        return results.length()>1?results:"";
     }
 
     private String getIEVersion() {
@@ -108,17 +123,21 @@ public class PCDataGrabber {
 
     private String getFirefoxVersion() {
 //        need to check at different OS versions
-        try {
-            //ProcessBuilder builder = new ProcessBuilder("reg", "query", "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Mozilla\\Mozilla Firefox", "/v", "CurrentVersion");
-            ProcessBuilder builder = new ProcessBuilder("reg", "query", "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\mozilla.org\\Mozilla", "/v", "CurrentVersion");
-            String[] a = executeScript(builder).get(2).split(" ");
-            for (int i = 0; i < 10; i++) {
-                a = ArrayUtils.removeElement(a, "");
+        String[] regs = {"HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Mozilla\\Mozilla Firefox",
+                "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\mozilla.org\\Mozilla"};
+        for (String reg : regs) {
+            try {
+                ProcessBuilder builder = new ProcessBuilder("reg", "query", reg, "/v", "CurrentVersion");
+                String[] a = executeScript(builder).get(2).split(" ");
+                for (int i = 0; i < 10; i++) {
+                    a = ArrayUtils.removeElement(a, "");
+                }
+                return a[2];
+            } catch (Exception e) {
+
             }
-            return a[2];
-        } catch (Exception e) {
-            return "";
         }
+        return "";
     }
 
     private String getChromeVersion() {
@@ -150,28 +169,28 @@ public class PCDataGrabber {
         return result;
     }
 
-    private static String matchAndReplaceChars(String sourceString)
-    {
-        LinkedList<Character> arr = new LinkedList<Character>();
-        char array[] = sourceString.toCharArray();
-        for (char a:array) arr.add(a);
-        for (int i = 0; i < arr.size(); i++)
+    private String getUserName(){
+        try{return System.getProperty("user.name");}
+        catch (Exception e){return "";}
+    }
+
+    private class reg{
+        String path,key,version,value,pathSP,keySP;
+        public reg(String Path,String Key,String Value,String Version,String PathSP,String KeySP)
         {
-            int nVal = (int)(arr.get(i).toString().charAt(0));
-            boolean bISO = Character.isISOControl(nVal);
-            boolean bIgnorable = Character.isIdentifierIgnorable(nVal);
-            if (nVal!=10 && (nVal == 9 || bISO || bIgnorable)) {
-                arr.remove(i);
-                i--;
-            }
-            else if (nVal > 255) {
-                arr.remove(i);
-                i--;
-            }
+            path=Path;
+            key=Key;
+            version=Version;
+            value=Value;
+            pathSP=PathSP;
+            keySP=KeySP;
         }
-        String returnString = "";
-        for (Character c:arr) returnString +=c.toString();
-        returnString = returnString.replaceAll("\\s{2,}"," ").replaceAll("\\s\\(\\)\\.?","");
-        return returnString;
+
+        public String getPath(){return path;}
+        public String getKey(){return key;}
+        public String getVersion(){return version;}
+        public String getValue(){return value;}
+        public String getPathSP(){return pathSP;}
+        public String getKeySP(){return keySP;}
     }
 }
