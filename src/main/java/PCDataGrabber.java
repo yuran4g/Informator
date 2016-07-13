@@ -63,7 +63,7 @@ public class PCDataGrabber {
             }
             if (param.equals("User")){
                 String data = getUserName();
-                if (!data.equals("")) result.put("User","User: " + data);
+                if (!data.equals("")) result.put("User","User: " + data + "\n");
             }
         }
         grabbedData = result;

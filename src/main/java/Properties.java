@@ -20,7 +20,7 @@ public final class Properties {
 
     private final static String PROPERTIES_FILE = "properties.txt";
 
-    public final static ArrayList<String> allProperties = new ArrayList<String>(Arrays.asList("OS", "IE", "Chrome", "Firefox", "Java", "NET", "User"));
+    public final static ArrayList<String> allProperties = new ArrayList<String>(Arrays.asList("OS", "User","IE", "Chrome", "Firefox", "Java", "NET"));
 
     private ArrayList<String> userProperties;
 
