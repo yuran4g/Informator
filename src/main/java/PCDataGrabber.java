@@ -81,21 +81,8 @@ public class PCDataGrabber {
 
     private String getNETVersion() {
         String results = "\n";
-        reg[] regs = {
-                new reg("HKLM\\Software\\Microsoft\\Active Setup\\Installed Components\\{78705f0d-e8db-4b2d-8193-982bdda15ecd}","Version","","1.0","HKLM\\Software\\Microsoft\\Active Setup\\Installed Components\\{78705f0d-e8db-4b2d-8193-982bdda15ecd}","Version"),
-                new reg("HKLM\\Software\\Microsoft\\Active Setup\\Installed Components\\{FDC11A6F-17D1-48f9-9EA3-9051954BAA24}","Version","","1.0","HKLM\\Software\\Microsoft\\Active Setup\\Installed Components\\{FDC11A6F-17D1-48f9-9EA3-9051954BAA24}","Version"),
-                new reg("HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v1.1.4322","","","1.1","HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v1.1.4322","SP"),
-                new reg("HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727","Version","","2.0","HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727","SP"),
-                new reg("HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727","Increment","","2.0 Original Release (RTM)","HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727","SP"),
-                new reg("HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v3.0","Version","","3.0","HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v3.0","SP"),
-                new reg("HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v3.5","Version","","3.5","HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v3.5","SP"),
-                new reg("HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v4\\Client","Version","","4.0 Client Profile","HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v4\\Client","Servicing"),
-                new reg("HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Version","","4.0 Full Profile","HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Servicing"),
-                new reg("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Release","0x6004f","4.6","HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Servicing"),
-                new reg("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Release","0x60051","4.6","HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Servicing"),
-                new reg("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Release","0x6040e","4.6.1","HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Servicing"),
-                new reg("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Release","0x6041f","4.6.1","HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full","Servicing")};
-        for (reg r:regs){
+        Reg[] regs = RegsWorker.LoadRegs("regs.json");
+        for (Reg r:regs){
             try {
                 ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
                 String s = executeScript(builder).get(2).trim().split(" ")[8];
@@ -179,27 +166,5 @@ public class PCDataGrabber {
         catch (Exception e){
             logger.info("Can not get user name");
             return "";}
-    }
-
-
-    private class reg{
-        //why you made it as internal class? make it separated
-        String path,key,version,value,pathSP,keySP;
-        public reg(String Path,String Key,String Value,String Version,String PathSP,String KeySP)
-        {
-            path=Path;
-            key=Key;
-            version=Version;
-            value=Value;
-            pathSP=PathSP;
-            keySP=KeySP;
-        }
-// why it is public?
-        public String getPath(){return path;}
-        public String getKey(){return key;}
-        public String getVersion(){return version;}
-        public String getValue(){return value;}
-        public String getPathSP(){return pathSP;}
-        public String getKeySP(){return keySP;}
     }
 }
