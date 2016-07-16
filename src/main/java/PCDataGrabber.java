@@ -106,6 +106,7 @@ public class PCDataGrabber {
                 if (!s.equals("0x0"))results+="SP"+s.replaceAll("^0x","")+"\n";
                 else results+="\n";
             } catch (Exception e) {
+                logger.trace("Can not find registry = "+r.getPath());
             }
         }
         return results.length()>1?results:"";
