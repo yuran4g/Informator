@@ -181,7 +181,9 @@ public class PCDataGrabber {
             return "";}
     }
 
+
     private class reg{
+        //why you made it as internal class? make it separated
         String path,key,version,value,pathSP,keySP;
         public reg(String Path,String Key,String Value,String Version,String PathSP,String KeySP)
         {
@@ -192,7 +194,7 @@ public class PCDataGrabber {
             pathSP=PathSP;
             keySP=KeySP;
         }
-
+// why it is public?
         public String getPath(){return path;}
         public String getKey(){return key;}
         public String getVersion(){return version;}
