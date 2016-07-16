@@ -3,6 +3,10 @@
  */
 public class Launcher{
     public static void main(String[] args) {
-        Informator informator = new Informator();
+        Informator informator;
+        if (args.length==0)
+            informator = new Informator();
+        else
+            informator=new Informator(args);
     }
 }

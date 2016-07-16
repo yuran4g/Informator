@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicCheckBoxMenuItemUI;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
@@ -36,6 +37,12 @@ public class Informator extends JFrame {
             }
         });
         thread.start();
+    }
+
+    public Informator(String[] args){
+        PCDataGrabber.getInstance().grabData(Properties.allProperties);
+        params = new ArrayList<String>(Properties.allProperties);
+        SaveToFile(args[0]);
     }
 
     private void createUI(){
@@ -167,6 +174,16 @@ public class Informator extends JFrame {
         public void mouseReleased(MouseEvent e) {
             pressed = false;
         }
+    }
+
+    public void SaveToFile(String Path){
+        String Data = PCDataGrabber.getGrabbedData(params);
+        try {
+            PrintWriter writer = new PrintWriter(Path);
+            writer.write(Data);
+            writer.close();
+        }
+        catch (Exception e){}
     }
 }
 
