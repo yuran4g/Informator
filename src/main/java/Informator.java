@@ -1,3 +1,5 @@
+import org.apache.log4j.Logger;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicCheckBoxMenuItemUI;
 import java.awt.*;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
  * Created by yksenofontov on 08.07.2016.
  */
 public class Informator extends JFrame {
+    private final static Logger logger = Logger.getLogger(Informator.class);
     private int left, top, dy, dx;
     private boolean pressed, ready;
     private static JPopupMenu menu;
@@ -24,14 +27,16 @@ public class Informator extends JFrame {
         Thread thread = new Thread(new Runnable() {
             public void run() {
                 while (true) {
+                    logger.debug("Start grabbing OS data");
                     PCDataGrabber.getInstance().grabData(Properties.allProperties);
+                    logger.debug("OS data successfully grabbed");
                     ready = true;
                     Check();
                     jl.setIcon(scaledIcon("resources\\images.png"));
                     try {
                         Thread.sleep(300000);//reload data every 5min
                     } catch (InterruptedException e) {
-                        System.out.println("Can not sleep the thread");
+                        logger.error("Can not sleep the thread");
                     }
                 }
             }
@@ -92,7 +97,7 @@ public class Informator extends JFrame {
         menuItem = new JMenuItem("Exit");
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+                logger.debug("Close program"); System.exit(0);
             }
         });
         menu.add(menuItem);
@@ -158,7 +163,9 @@ public class Informator extends JFrame {
                 if (!ready) return;
                 String grabbedData = PCDataGrabber.getGrabbedData(params);
                 ClipboardAccess.getInstance().copyToClipboard(grabbedData);
+                logger.debug("OS data successfully copied to clipboard");
             } else if (e.getButton() == 3) {
+                logger.info("Show context menu");
                 menu.setVisible(true);
                 menu.show(e.getComponent(), e.getX(), e.getY());
             }
@@ -183,7 +190,9 @@ public class Informator extends JFrame {
             writer.write(Data);
             writer.close();
         }
-        catch (Exception e){}
+        catch (Exception e){
+            logger.error("Can not save to file " + Path);
+        }
     }
 }
 

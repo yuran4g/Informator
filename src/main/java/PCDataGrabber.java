@@ -1,4 +1,6 @@
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -8,7 +10,7 @@ import java.util.HashMap;
  * Created by yksenofontov on 08.07.2016.
  */
 public class PCDataGrabber {
-
+    private final static Logger logger = Logger.getLogger(PCDataGrabber.class);
     private static PCDataGrabber instance = null;
 
     private PCDataGrabber() {
@@ -104,7 +106,6 @@ public class PCDataGrabber {
                 if (!s.equals("0x0"))results+="SP"+s.replaceAll("^0x","")+"\n";
                 else results+="\n";
             } catch (Exception e) {
-
             }
         }
         return results.length()>1?results:"";
@@ -116,6 +117,7 @@ public class PCDataGrabber {
             String[] a = executeScript(builder).get(2).split(" ");
             return a[a.length - 1];
         } catch (Exception e) {
+            logger.info("Can not find IE version");
             return "";
         }
 
@@ -134,7 +136,7 @@ public class PCDataGrabber {
                 }
                 return a[2];
             } catch (Exception e) {
-
+                logger.info("Can not find Firefox version");
             }
         }
         return "";
@@ -147,6 +149,7 @@ public class PCDataGrabber {
             String[] a = executeScript(builder).get(2).split(" ");
             return a[a.length - 1];
         } catch (Exception e) {
+            logger.info("Can not find Chrome version");
             return "";
         }
     }
@@ -164,6 +167,7 @@ public class PCDataGrabber {
             }
             input.close();
         } catch (Exception ex) {
+            logger.info("Can not execute script");
             ex.printStackTrace();
         }
         return result;
@@ -171,7 +175,9 @@ public class PCDataGrabber {
 
     private String getUserName(){
         try{return System.getProperty("user.name");}
-        catch (Exception e){return "";}
+        catch (Exception e){
+            logger.info("Can not get user name");
+            return "";}
     }
 
     private class reg{
