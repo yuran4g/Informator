@@ -81,7 +81,7 @@ public class PCDataGrabber {
 
     private String getNETVersion() {
         String results = "\n";
-        Reg[] regs = RegsWorker.LoadRegs("regs.json");
+        Reg[] regs = RegsWorker.loadRegs("regs.json");
         for (Reg r:regs){
             try {
                 ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
