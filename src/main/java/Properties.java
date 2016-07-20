@@ -20,7 +20,7 @@ public final class Properties {
 
     private final static String PROPERTIES_FILE = "properties.txt";
 
-    public final static ArrayList<String> allProperties = new ArrayList<String>(Arrays.asList("OS", "User","IE", "Chrome", "Firefox", "Java", "NET"));
+    final static ArrayList<String> allProperties = new ArrayList<String>(Arrays.asList("OS", "User","IE", "Chrome", "Firefox", "Java", "NET"));
 
     private ArrayList<String> userProperties;
 
@@ -28,11 +28,11 @@ public final class Properties {
         return userProperties;
     }
 
-    public void setUserProperties(ArrayList<String> userProperties) {
+    void setUserProperties(ArrayList<String> userProperties) {
         this.userProperties = userProperties;
     }
 
-    public void loadUserProperties() {
+    private void loadUserProperties() {
         File file = new File(PROPERTIES_FILE);
         if (file.exists()) {
             try {

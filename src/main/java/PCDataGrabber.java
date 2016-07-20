@@ -81,7 +81,7 @@ public class PCDataGrabber {
 
     private String getNETVersion() {
         String results = "\n";
-        Reg[] regs = RegsWorker.loadRegs("regs.json");
+        Reg[] regs = RegsWorker.loadRegs("net.json");
         for (Reg r:regs){
             try {
                 ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
@@ -100,46 +100,51 @@ public class PCDataGrabber {
     }
 
     private String getIEVersion() {
-        try {
-            ProcessBuilder builder = new ProcessBuilder("reg", "query", "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Internet Explorer\\", "/v", "svcVersion");
-            String[] a = executeScript(builder).get(2).split(" ");
-            return a[a.length - 1];
-        } catch (Exception e) {
-            logger.info("Can not find IE version");
-            return "";
+        Reg[] rs = RegsWorker.loadRegs("ie.json");
+        for(Reg r:rs) {
+            try {
+                ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
+                String[] a = executeScript(builder).get(2).split(" ");
+                return a[a.length - 1];
+            } catch (Exception e) {
+                //logger.info("Can not find IE version");
+            }
         }
-
+        logger.info("Can not find IE version");
+        return "";
     }
 
     private String getFirefoxVersion() {
-//        need to check at different OS versions
-        String[] regs = {"HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Mozilla\\Mozilla Firefox",
-                "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\mozilla.org\\Mozilla"};
-        for (String reg : regs) {
+        Reg[] rs = RegsWorker.loadRegs("ff.json");
+        for(Reg r:rs) {
             try {
-                ProcessBuilder builder = new ProcessBuilder("reg", "query", reg, "/v", "CurrentVersion");
+                ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
                 String[] a = executeScript(builder).get(2).split(" ");
                 for (int i = 0; i < 10; i++) {
                     a = ArrayUtils.removeElement(a, "");
                 }
                 return a[2];
             } catch (Exception e) {
-                logger.info("Can not find Firefox version");
+                //logger.info("Can not find Firefox version");
             }
         }
+        logger.info("Can not find Firefox version");
         return "";
     }
 
     private String getChromeVersion() {
-//        need to check at different OS versions
-        try {
-            ProcessBuilder builder = new ProcessBuilder("reg", "query", "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Google Chrome", "/v", "Version");
-            String[] a = executeScript(builder).get(2).split(" ");
-            return a[a.length - 1];
-        } catch (Exception e) {
-            logger.info("Can not find Chrome version");
-            return "";
+        Reg[] rs = RegsWorker.loadRegs("ie.json");
+        for(Reg r:rs) {
+            try {
+                ProcessBuilder builder = new ProcessBuilder("reg", "query", "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Google Chrome", "/v", "Version");
+                String[] a = executeScript(builder).get(2).split(" ");
+                return a[a.length - 1];
+            } catch (Exception e) {
+                //logger.info("Can not find Chrome version");
+            }
         }
+        logger.info("Can not find Chrome version");
+        return "";
     }
 
     private ArrayList<String> executeScript(ProcessBuilder builder) {
