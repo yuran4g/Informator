@@ -1,4 +1,3 @@
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -6,9 +5,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by yksenofontov on 08.07.2016.
- */
+
 public class PCDataGrabber {
     private final static Logger logger = Logger.getLogger(PCDataGrabber.class);
     private static PCDataGrabber instance = null;
@@ -16,19 +13,19 @@ public class PCDataGrabber {
     private PCDataGrabber() {
     }
 
-    public static PCDataGrabber getInstance() {
+    static PCDataGrabber getInstance() {
         if (instance == null)
             instance = new PCDataGrabber();
         return instance;
     }
 
-    public static boolean Contains(String param){
+    static boolean Contains(String param){
         return grabbedData.containsKey(param);
     }
 
     private static HashMap<String,String> grabbedData;
 
-    public static String getGrabbedData(ArrayList<String> params) {
+    static String getGrabbedData(ArrayList<String> params) {
         String result = "PC Configuration:\n";
         for (String param : params) {
             result = result + grabbedData.get(param);
@@ -36,7 +33,7 @@ public class PCDataGrabber {
         return result;
     }
 
-    public void grabData(ArrayList<String> params) {
+    void grabData(ArrayList<String> params) {
         HashMap<String,String> result = new HashMap<String,String>();
         for (String param : params) {
             if (param.equals("OS")) {
@@ -120,10 +117,7 @@ public class PCDataGrabber {
             try {
                 ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
                 String[] a = executeScript(builder).get(2).split(" ");
-                for (int i = 0; i < 10; i++) {
-                    a = ArrayUtils.removeElement(a, "");
-                }
-                return a[2];
+                return a[a.length-1];
             } catch (Exception e) {
                 //logger.info("Can not find Firefox version");
             }
@@ -133,10 +127,10 @@ public class PCDataGrabber {
     }
 
     private String getChromeVersion() {
-        Reg[] rs = RegsWorker.loadRegs("ie.json");
+        Reg[] rs = RegsWorker.loadRegs("gc.json");
         for(Reg r:rs) {
             try {
-                ProcessBuilder builder = new ProcessBuilder("reg", "query", "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Google Chrome", "/v", "Version");
+                ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
                 String[] a = executeScript(builder).get(2).split(" ");
                 return a[a.length - 1];
             } catch (Exception e) {

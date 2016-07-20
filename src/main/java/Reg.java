@@ -1,9 +1,7 @@
-import java.io.Serializable;
-
 /**
  * Created by Андрей on 16.07.2016.
  */
-public class Reg implements Serializable {
+public class Reg {
     public String path, key, version, value, pathSP, keySP;
 
     public Reg(){}

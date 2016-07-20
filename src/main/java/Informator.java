@@ -7,9 +7,6 @@ import java.awt.event.*;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-/**
- * Created by yksenofontov on 08.07.2016.
- */
 public class Informator extends JFrame {
     private final static Logger logger = Logger.getLogger(Informator.class);
     private int left, top, dy, dx;
