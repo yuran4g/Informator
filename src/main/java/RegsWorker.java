@@ -4,20 +4,25 @@ import java.io.File;
 import java.io.FileInputStream;
 
 
-public final class RegsWorker {
+final class RegsWorker {
     private final static Logger logger = Logger.getLogger(PCDataGrabber.class);
-    public static Reg[] loadRegs(String path){
-        Reg[] ret=null;
+    private static RegHolder[] regs=null;
+    static void loadRegs(){
         com.fasterxml.jackson.databind.ObjectMapper mapper = new ObjectMapper();
         try{
-            ret = mapper.readValue(new FileInputStream(path),Reg[].class);
+            regs = mapper.readValue(new FileInputStream("registers.json"),RegHolder[].class);
         }
         catch (Exception e){
-            logger.error("Can not load registry from file = " + path);
+            logger.error("Can not load registry from file registers.json");
         }
-        return ret;
     }
-    public static void saveRegs(String path,Reg[] regs){
+    static Reg[] getRegs(String name){
+        for (RegHolder rh : regs) {
+            if (rh.Name.equals(name)) return rh.regs;
+        }
+        return null;
+    }
+    static void saveRegs(String path,Reg[] regs){
         try {
             com.fasterxml.jackson.databind.ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(new File(path), regs);

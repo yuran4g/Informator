@@ -3,6 +3,7 @@
  */
 public class Launcher{
     public static void main(String[] args) {
+        RegsWorker.loadRegs();
         if (args.length==0)
             new Informator();
         else

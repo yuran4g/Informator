@@ -78,7 +78,7 @@ public class PCDataGrabber {
 
     private String getNETVersion() {
         String results = "\n";
-        Reg[] regs = RegsWorker.loadRegs("net.json");
+        Reg[] regs = RegsWorker.getRegs("net");
         for (Reg r:regs){
             try {
                 ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
@@ -97,48 +97,24 @@ public class PCDataGrabber {
     }
 
     private String getIEVersion() {
-        Reg[] rs = RegsWorker.loadRegs("ie.json");
-        for(Reg r:rs) {
-            try {
-                ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
-                String[] a = executeScript(builder).get(2).split(" ");
-                return a[a.length - 1];
-            } catch (Exception e) {
-                //logger.info("Can not find IE version");
-            }
-        }
-        logger.info("Can not find IE version");
-        return "";
+        Reg[] rs = RegsWorker.getRegs("ie");
+        String ret = findValues(rs);
+        if (ret.equals(""))logger.info("Can not find IE version");
+        return ret;
     }
 
     private String getFirefoxVersion() {
-        Reg[] rs = RegsWorker.loadRegs("ff.json");
-        for(Reg r:rs) {
-            try {
-                ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
-                String[] a = executeScript(builder).get(2).split(" ");
-                return a[a.length-1];
-            } catch (Exception e) {
-                //logger.info("Can not find Firefox version");
-            }
-        }
-        logger.info("Can not find Firefox version");
-        return "";
+        Reg[] rs = RegsWorker.getRegs("ff");
+        String ret = findValues(rs);
+        if (ret.equals(""))logger.info("Can not find Firefox version");
+        return ret;
     }
 
     private String getChromeVersion() {
-        Reg[] rs = RegsWorker.loadRegs("gc.json");
-        for(Reg r:rs) {
-            try {
-                ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
-                String[] a = executeScript(builder).get(2).split(" ");
-                return a[a.length - 1];
-            } catch (Exception e) {
-                //logger.info("Can not find Chrome version");
-            }
-        }
-        logger.info("Can not find Chrome version");
-        return "";
+        Reg[] rs = RegsWorker.getRegs("gc");
+        String ret = findValues(rs);
+        if (ret.equals(""))logger.info("Can not find Chrome version");
+        return ret;
     }
 
     private ArrayList<String> executeScript(ProcessBuilder builder) {
@@ -158,6 +134,18 @@ public class PCDataGrabber {
             ex.printStackTrace();
         }
         return result;
+    }
+
+    private String findValues(Reg[] regs){
+        for(Reg r:regs) {
+            try {
+                ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
+                String[] a = executeScript(builder).get(2).split(" ");
+                return a[a.length - 1];
+            } catch (Exception e) {
+            }
+        }
+        return "";
     }
 
     private String getUserName(){

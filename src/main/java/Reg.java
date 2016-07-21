@@ -39,3 +39,9 @@ public class Reg {
         return keySP;
     }
 }
+
+class RegHolder{
+    public String Name;
+    public Reg[] regs;
+    public RegHolder(){}
+}
