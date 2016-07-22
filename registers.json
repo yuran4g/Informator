@@ -1,5 +1,5 @@
 [
-  {"Name":"ff","regs":
+  {"Name":"Firefox","regs":
   [
     {
       "path":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Mozilla\\Mozilla Firefox",
@@ -11,7 +11,7 @@
     }
   ]
   },
-  {"Name":"gc","regs":
+  {"Name":"Chrome","regs":
   [
     {
       "path":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Google Chrome",
@@ -19,7 +19,7 @@
     }
   ]
   },
-  {"Name":"ie","regs":
+  {"Name":"IE","regs":
   [
     {
       "path":"HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Internet Explorer\\",
@@ -27,7 +27,7 @@
     }
   ]
   },
-  {"Name":"net","regs":
+  {"Name":".NET","regs":
   [
     {
       "path":"HKLM\\Software\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727",

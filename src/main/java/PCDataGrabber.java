@@ -3,7 +3,9 @@ import org.apache.log4j.Logger;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class PCDataGrabber {
@@ -26,7 +28,7 @@ public class PCDataGrabber {
     private static HashMap<String,String> grabbedData;
 
     static String getGrabbedData(ArrayList<String> params) {
-        String result = "PC Configuration:\n";
+        String result = "";
         for (String param : params) {
             result = result + grabbedData.get(param);
         }
@@ -35,50 +37,37 @@ public class PCDataGrabber {
 
     void grabData(ArrayList<String> params) {
         HashMap<String,String> result = new HashMap<String,String>();
+        String data = "";
         for (String param : params) {
             if (param.equals("OS")) {
-                String data = getOSVersion();
-                if (!data.equals("")) result.put("OS","OS version: " + data + "\n");
+                data = System.getProperty("os.name");
             }
             if (param.equals("Java")){
-                String data = getJavaVersion();
-                if (!data.equals("")) result.put("Java","Java version: " + data + "\n");
+                data = System.getProperty("java.version");
             }
             if (param.equals("IE")){
-                String data = getIEVersion();
-                if (!data.equals("")) result.put("IE","IE version: " + data + "\n");
+                data = getRegistryValue(param);
             }
             if (param.equals("Chrome")){
-                String data = getChromeVersion();
-                if (!data.equals("")) result.put("Chrome","Chrome version: " + data + "\n");
+                data = getRegistryValue(param);
             }
             if (param.equals("Firefox")){
-                String data = getFirefoxVersion();
-                if (!data.equals("")) result.put("Firefox","Firefox version: " + data + "\n");
+                data = getRegistryValue(param);
             }
             if (param.equals("NET")){
-                String data = getNETVersion();
-                if (!data.equals("")) result.put("NET","NET: " + data);
+                data = getNETVersion();
             }
             if (param.equals("User")){
-                String data = getUserName();
-                if (!data.equals("")) result.put("User","User: " + data + "\n");
+                data = System.getProperty("user.name");
             }
+            if (!data.equals("")) result.put(param,param+" : " + data + "\n");
         }
         grabbedData = result;
     }
 
-    private String getOSVersion() {
-        return System.getProperty("os.name");
-    }
-
-    private String getJavaVersion() {
-        return System.getProperty("java.version");
-    }
-
     private String getNETVersion() {
         String results = "\n";
-        Reg[] regs = RegsWorker.getRegs("net");
+        Reg[] regs = RegsWorker.getRegs(".NET");
         for (Reg r:regs){
             try {
                 ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
@@ -96,30 +85,15 @@ public class PCDataGrabber {
         return results.length()>1?results:"";
     }
 
-    private String getIEVersion() {
-        Reg[] rs = RegsWorker.getRegs("ie");
+    private String getRegistryValue(String name) {
+        Reg[] rs = RegsWorker.getRegs(name);
         String ret = findValues(rs);
-        if (ret.equals(""))logger.info("Can not find IE version");
-        return ret;
-    }
-
-    private String getFirefoxVersion() {
-        Reg[] rs = RegsWorker.getRegs("ff");
-        String ret = findValues(rs);
-        if (ret.equals(""))logger.info("Can not find Firefox version");
-        return ret;
-    }
-
-    private String getChromeVersion() {
-        Reg[] rs = RegsWorker.getRegs("gc");
-        String ret = findValues(rs);
-        if (ret.equals(""))logger.info("Can not find Chrome version");
+        if (ret.equals(""))logger.info("Can not find "+name+" version");
         return ret;
     }
 
     private ArrayList<String> executeScript(ProcessBuilder builder) {
         ArrayList<String> result = new ArrayList<String>();
-
         String line;
         try {
             Process p = builder.start();
@@ -141,17 +115,19 @@ public class PCDataGrabber {
             try {
                 ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
                 String[] a = executeScript(builder).get(2).split(" ");
-                return a[a.length - 1];
+                List<String> list = new ArrayList<String>(Arrays.asList(a));
+                list.removeAll(Arrays.asList("", null));
+                String final_value = "";
+                for (int i = 2; i < list.size(); ) {
+                    final_value = final_value + list.get(i);
+                    i = i + 1;
+                }
+                return final_value;
             } catch (Exception e) {
+                logger.trace("Can not find " + r.getPath() + " " + r.getKey());
             }
         }
         return "";
     }
 
-    private String getUserName(){
-        try{return System.getProperty("user.name");}
-        catch (Exception e){
-            logger.info("Can not get user name");
-            return "";}
-    }
 }
