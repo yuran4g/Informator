@@ -8,6 +8,10 @@
     {
       "path":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\mozilla.org\\Mozilla",
       "key":"CurrentVersion"
+    },
+    {
+      "path":"HKEY_LOCAL_MACHINE\\SOFTWARE\\mozilla.org\\Mozilla",
+      "key":"CurrentVersion"
     }
   ]
   },
@@ -15,6 +19,10 @@
   [
     {
       "path":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Google Chrome",
+      "key":"Version"
+    },
+	{
+      "path":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Google Chrome",
       "key":"Version"
     }
   ]
@@ -24,6 +32,10 @@
     {
       "path":"HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Internet Explorer\\",
       "key":"svcVersion"
+    },
+	{
+      "path":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Internet Explorer\\",
+      "key":"Version"
     }
   ]
   },
