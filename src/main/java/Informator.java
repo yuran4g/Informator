@@ -160,6 +160,7 @@ public class Informator extends JFrame {
                 if (!ready) return;
                 String grabbedData = PCDataGrabber.getGrabbedData(params);
                 ClipboardAccess.getInstance().copyToClipboard(grabbedData);
+                showTooltip(e,"Data copied to buffer");
                 logger.debug("OS data successfully copied to clipboard");
             } else if (e.getButton() == 3) {
                 logger.info("Show context menu");

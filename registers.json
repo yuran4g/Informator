@@ -80,6 +80,38 @@
     {
       "path":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
       "key":"Release",
+      "version":"4.5",
+      "value":"0x5c615",
+      "pathSP":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
+      "keySP":"Servicing"
+    },
+    {
+      "path":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
+      "key":"Release",
+      "version":"4.5.1",
+      "value":"0x5c733",
+      "pathSP":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
+      "keySP":"Servicing"
+    },
+    {
+      "path":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
+      "key":"Release",
+      "version":"4.5.1",
+      "value":"0x5c786",
+      "pathSP":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
+      "keySP":"Servicing"
+    },
+    {
+      "path":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
+      "key":"Release",
+      "version":"4.5.2",
+      "value":"0x5cbf5",
+      "pathSP":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
+      "keySP":"Servicing"
+    },
+    {
+      "path":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
+      "key":"Release",
       "version":"4.6",
       "value":"0x6004f",
       "pathSP":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
@@ -106,6 +138,22 @@
       "key":"Release",
       "version":"4.6.1",
       "value":"0x6041f",
+      "pathSP":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
+      "keySP":"Servicing"
+    },
+    {
+      "path":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
+      "key":"Release",
+      "version":"4.6.2",
+      "value":"0x605fc",
+      "pathSP":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
+      "keySP":"Servicing"
+    },
+    {
+      "path":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
+      "key":"Release",
+      "version":"4.6.2",
+      "value":"0x605fb",
       "pathSP":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
       "keySP":"Servicing"
     }
