@@ -32,8 +32,10 @@ public class PCDataGrabber {
     public static String getGrabbedData(ArrayList<String> params) {
         String result = "";
         for (String param : params) {
+            if (grabbedData.get(param)==null) continue;
             result = result + grabbedData.get(param);
         }
+        result=result.replace("\n","\r\n");
         return result;
     }
 
@@ -73,7 +75,16 @@ public class PCDataGrabber {
         for (Reg r:regs){
             try {
                 ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
-                String s = executeScript(builder).get(2).trim().split(" ")[8];
+                String s=null;
+                ArrayList<String> ret = executeScript(builder);
+                int n=0;
+                for (;n<ret.size();n++){
+                    if (ret.get(n).contains("REG_")) break;
+                }
+                if (ret.get(n).contains("\t"))
+                    s = ret.get(n).split("\t")[2];
+                else if (ret.get(n).contains("    "))
+                    s = ret.get(n).split("[\\s]{4}")[3];
                 if (s.contains(r.getValue()))results+="- Microsoft .NET Framework "+r.getVersion()+" ";
                 else continue;
                 builder = new ProcessBuilder("reg", "query", r.getPathSP(), "/v", r.getKeySP());
@@ -82,6 +93,9 @@ public class PCDataGrabber {
                 else results+="\n";
             } catch (Exception e) {
                 logger.trace("Can not find registry = "+r.getPath());
+            }
+            finally {
+                if (results.charAt(results.length()-1)!='\n') results+='\n';
             }
         }
         return results.length()>1?results:"";
@@ -116,7 +130,16 @@ public class PCDataGrabber {
         for(Reg r:regs) {
             try {
                 ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
-                String[] a = executeScript(builder).get(2).split(" ");
+                ArrayList<String> ret = executeScript(builder);
+                int n=0;
+                for (;n<ret.size();n++){
+                    if (ret.get(n).contains("REG_SZ")) break;
+                }
+                String[] a=null;
+                if (ret.get(n).contains("\t"))
+                    a = ret.get(n).split("\t");
+                else if (ret.get(n).contains("    "))
+                    a=ret.get(n).split("[\\s]{4}");
                 List<String> list = new ArrayList<String>(Arrays.asList(a));
                 list.removeAll(Arrays.asList("", null));
                 String final_value = "";
@@ -126,7 +149,7 @@ public class PCDataGrabber {
                 }
                 return final_value;
             } catch (Exception e) {
-                logger.trace("Can not find " + r.getPath() + " " + r.getKey());
+                logger.info("Can not find " + r.getPath() + " " + r.getKey()+"\n");
             }
         }
         return "";

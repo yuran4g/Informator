@@ -18,6 +18,7 @@ public class Informator extends JFrame {
     private static JLabel jl = new JLabel();
 
     private static final int IMAGE_WIDTH = 30,IMAGE_HEIGHT=30;
+    private static final String ReadyIcon="resources\\images.png",NotReadyIcon="resources\\Red_icon.png";
 
     public Informator() {
         createUI();
@@ -31,7 +32,7 @@ public class Informator extends JFrame {
                     logger.debug("OS data successfully grabbed");
                     ready = true;
                     Check();
-                    jl.setIcon(scaledIcon("resources\\images.png"));
+                    jl.setIcon(scaledIcon(ReadyIcon));
                     try {
                         Thread.sleep(300000);//reload data every 5min
                     } catch (InterruptedException e) {
@@ -69,7 +70,7 @@ public class Informator extends JFrame {
     }
 
     private JPanel createIconPanel(){
-        jl.setIcon(scaledIcon("resources\\Red_icon.png"));
+        jl.setIcon(scaledIcon(NotReadyIcon));
         jl.setVisible(true);
         jl.setBounds(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
         JPanel jp = new JPanel(null);
@@ -135,26 +136,25 @@ public class Informator extends JFrame {
     }
 
     private class TooltipListener implements MouseListener{
-        public void mouseEntered(MouseEvent e){
-            if(ready) showTooltip(e,"Done");
-            else showTooltip(e,"Data isn't ready");
+        TooltipListener(){
+            ToolTipManager.sharedInstance().setInitialDelay(0);
         }
 
-        public void mouseExited(MouseEvent e){
-            hideTooltip();
+        public void mouseEntered(MouseEvent e){
+            if(!ready) showTooltip(e,"Data isn't ready");
         }
+
+        public void mouseExited(MouseEvent e){hideTooltip();}
 
         private void showTooltip(MouseEvent e,String message) {
             JComponent component = (JComponent) e.getSource();
             component.setToolTipText(message);
-            MouseEvent phantom = new MouseEvent(component, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, 0, 0, 0, false);
+            MouseEvent phantom = new MouseEvent(component, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, 0, 10, 0, false);
             ToolTipManager.sharedInstance().setEnabled(true);
             ToolTipManager.sharedInstance().mouseMoved(phantom);
         }
 
-        private void hideTooltip(){
-            ToolTipManager.sharedInstance().setEnabled(false);
-        }
+        private void hideTooltip(){ToolTipManager.sharedInstance().setEnabled(false);}
 
         public void mouseClicked(MouseEvent e) {
             ///1-left,3-right
@@ -162,6 +162,7 @@ public class Informator extends JFrame {
                 if (!ready) return;
                 String grabbedData = PCDataGrabber.getGrabbedData(params);
                 ClipboardAccess.getInstance().copyToClipboard(grabbedData);
+                showTooltip(e,"Data copied to buffer");
                 logger.debug("OS data successfully copied to clipboard");
             } else if (e.getButton() == 3) {
                 logger.info("Show context menu");
@@ -196,7 +197,6 @@ public class Informator extends JFrame {
 }
 
 class StayOpenCheckBoxMenuItemUI extends BasicCheckBoxMenuItemUI {
-
     @Override
     protected void doClick(MenuSelectionManager msm) {
         menuItem.doClick(0);
