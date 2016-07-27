@@ -1,3 +1,5 @@
+package osData;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -5,13 +7,14 @@ import java.util.Arrays;
 /**
  * Created by yksenofontov on 08.07.2016.
  */
-final class Properties {
+public final class Properties {
+
     private static Properties instance = null;
 
     private Properties() {
     }
 
-    static Properties getInstance() {
+    public static Properties getInstance() {
         if (instance == null)
             instance = new Properties();
         instance.loadUserProperties();
@@ -20,7 +23,7 @@ final class Properties {
 
     private final static String PROPERTIES_FILE = "properties.txt";
 
-    final static ArrayList<String> allProperties = new ArrayList<String>(Arrays.asList("OS", "User","IE", "Chrome", "Firefox", "Java", "NET"));
+    public final static ArrayList<String> allProperties = new ArrayList<String>(Arrays.asList("OS", "User","IE", "Chrome", "Firefox", "Java", "NET"));
 
     private ArrayList<String> userProperties;
 
@@ -28,7 +31,7 @@ final class Properties {
         return userProperties;
     }
 
-    void setUserProperties(ArrayList<String> userProperties) {
+    public void setUserProperties(ArrayList<String> userProperties) {
         this.userProperties = userProperties;
     }
 

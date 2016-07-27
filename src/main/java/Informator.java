@@ -1,4 +1,6 @@
 import org.apache.log4j.Logger;
+import osData.PCDataGrabber;
+import osData.Properties;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicCheckBoxMenuItemUI;

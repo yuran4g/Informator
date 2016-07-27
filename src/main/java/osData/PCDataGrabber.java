@@ -1,3 +1,5 @@
+package osData;
+
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -15,19 +17,19 @@ public class PCDataGrabber {
     private PCDataGrabber() {
     }
 
-    static PCDataGrabber getInstance() {
+    public static PCDataGrabber getInstance() {
         if (instance == null)
             instance = new PCDataGrabber();
         return instance;
     }
 
-    static boolean Contains(String param){
+    public static boolean Contains(String param){
         return grabbedData.containsKey(param);
     }
 
     private static HashMap<String,String> grabbedData;
 
-    static String getGrabbedData(ArrayList<String> params) {
+    public static String getGrabbedData(ArrayList<String> params) {
         String result = "";
         for (String param : params) {
             result = result + grabbedData.get(param);
@@ -35,7 +37,7 @@ public class PCDataGrabber {
         return result;
     }
 
-    void grabData(ArrayList<String> params) {
+    public void grabData(ArrayList<String> params) {
         HashMap<String,String> result = new HashMap<String,String>();
         String data = "";
         for (String param : params) {

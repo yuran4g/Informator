@@ -1,3 +1,5 @@
+import osData.RegsWorker;
+
 /**
  * Created by yksenofontov on 08.07.2016.
  */
