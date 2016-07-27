@@ -1,3 +1,5 @@
+package ui;
+
 import org.apache.log4j.Logger;
 import osData.PCDataGrabber;
 import osData.Properties;
@@ -8,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import Util.*;
 
 public class Informator extends JFrame {
     private final static Logger logger = Logger.getLogger(Informator.class);
