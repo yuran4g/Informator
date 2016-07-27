@@ -1,7 +1,5 @@
 package fileHelper;
-/**
- * Created by Андрей on 27.07.2016.
- */
+
 import org.apache.log4j.Logger;
 
 import java.io.File;
