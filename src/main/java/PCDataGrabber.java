@@ -33,6 +33,7 @@ public class PCDataGrabber {
             if (grabbedData.get(param)==null) continue;
             result = result + grabbedData.get(param);
         }
+        result=result.replace("\n","\r\n");
         return result;
     }
 
@@ -90,6 +91,9 @@ public class PCDataGrabber {
                 else results+="\n";
             } catch (Exception e) {
                 logger.trace("Can not find registry = "+r.getPath());
+            }
+            finally {
+                if (results.charAt(results.length()-1)!='\n') results+='\n';
             }
         }
         return results.length()>1?results:"";

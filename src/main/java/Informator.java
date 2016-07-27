@@ -139,8 +139,7 @@ public class Informator extends JFrame {
         }
 
         public void mouseEntered(MouseEvent e){
-            if(ready) showTooltip(e,"Done");
-            else showTooltip(e,"Data isn't ready");
+            if(!ready) showTooltip(e,"Data isn't ready");
         }
 
         public void mouseExited(MouseEvent e){hideTooltip();}
