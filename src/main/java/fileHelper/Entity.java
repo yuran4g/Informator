@@ -2,6 +2,8 @@ package fileHelper;
 
 import org.apache.log4j.Logger;
 
+import java.io.File;
+
 /**
  * Created by yksenofontov on 27.07.2016.
  */
@@ -14,6 +16,7 @@ public class Entity {
         Name = name;
         Link = link;
     }
+
     public String getName() {
         return Name;
     }
@@ -30,12 +33,35 @@ public class Entity {
         Link = link;
     }
 
-    public String archive(){
+    public void archive() throws Exception {
         logger.info("Entity successfully archived");
-        return "";
     }
-    public String clean(){
-        logger.info("Entity successfully cleaned");
-        return "";
+
+    public void clean() throws Exception {
+        File file = new File(Link);
+        if (file.isFile() && file.exists()) {
+            file.delete();
+        } else {
+            if (file.isDirectory() && file.exists()) {
+                deleteFolder(file);
+            } else {
+                throw new Exception("Can not find file/dir");
+            }
+            logger.info("Entity successfully cleaned");
+        }
+    }
+
+    private void deleteFolder(File folder) {
+        File[] files = folder.listFiles();
+        if(files!=null) {
+            for(File f: files) {
+                if(f.isDirectory()) {
+                    deleteFolder(f);
+                } else {
+                    f.delete();
+                }
+            }
+        }
+        folder.delete();
     }
 }
