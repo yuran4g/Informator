@@ -9,13 +9,12 @@ import java.awt.event.WindowEvent;
 /**
  * Created by Андрей on 28.07.2016.
  */
-class actionWindow extends JFrame{
-    private JTextField name,path,oldName;
-    actionWindow(Archiver parent, int type){
+class ActionWindow extends JFrame{
+    ActionWindow(Archiver parent, int type){
         createUI(parent,type);
     }
     private int WIDTH,HEIGHT;
-    private actionWindow instance=this;
+    private ActionWindow instance=this;
 
     private void createUI(Archiver parent,int type) {
         WIDTH=parent.WIDTH;
@@ -31,43 +30,41 @@ class actionWindow extends JFrame{
         setVisible(true);
     }
 
+    private JPanel initTextField(JPanel panel,String fieldName, String fieldPath, String fieldOldName){
+        JTextField name = new JTextField(fieldName);
+        name.setBounds(10, 10, WIDTH - 20, 20);
+        panel.add(name);
+        if (!fieldPath.equals("")){
+            JTextField path = new JTextField(fieldPath);
+            path.setBounds(10, 70, WIDTH - 20, 20);
+            panel.add(path);
+        }
+        if (!fieldOldName.equals("")){
+            JTextField oldName = new JTextField(fieldOldName);
+            oldName.setBounds(10, 40, WIDTH - 20, 20);
+            panel.add(oldName);
+        }
+        return panel;
+    }
     private JPanel createPanel(int type){
         JPanel jp = new JPanel(null);
         jp.setBounds(0, 0, WIDTH, HEIGHT);
         JButton ok = new JButton("OK");
         ok.setBounds(WIDTH/2 - 30,HEIGHT - 70, 60, 20);
         jp.add(ok);
-        switch (type) {
-            case 1:
-                name = new JTextField("Name");
-                path = new JTextField("Path");
-                name.setBounds(10, 10, WIDTH - 20, 20);
-                path.setBounds(10, 40, WIDTH - 20, 20);
-                jp.add(name);
-                jp.add(path);
-                break;
-            case 2:
-                oldName = new JTextField("Old Name");
-                name = new JTextField("Name");
-                path = new JTextField("Path");
-                oldName.setBounds(10, 10, WIDTH - 20, 20);
-                name.setBounds(10, 40, WIDTH - 20, 20);
-                path.setBounds(10, 70, WIDTH - 20, 20);
-                jp.add(name);
-                jp.add(path);
-                jp.add(oldName);
-                break;
-            case 3:
-                name = new JTextField("Name");
-                name.setBounds(10, 10, WIDTH - 20, 20);
-                jp.add(name);
-                break;
-        }
         ok.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 instance.dispatchEvent(new WindowEvent(instance, WindowEvent.WINDOW_CLOSING));
             }
         });
+        switch (type) {
+            case 1:
+                return initTextField(jp,"Name", "Path", "");
+            case 2:
+                return initTextField(jp,"Name", "Path", "Old Name");
+            case 3:
+                return initTextField(jp,"Name", "", "");
+        }
         return jp;
     }
 }

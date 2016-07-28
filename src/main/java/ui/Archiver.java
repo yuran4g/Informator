@@ -15,7 +15,6 @@ public class Archiver extends JFrame {
     private final static Logger logger = Logger.getLogger(Archiver.class);
     int left, top;
     final int HEIGHT=180,WIDTH=260;
-    private JTextField name,path;
     private Archiver instance = this;
 
     public Archiver(){
@@ -40,8 +39,8 @@ public class Archiver extends JFrame {
         JPanel jp = new JPanel(null);
         jp.setVisible(true);
         jp.setBounds(0, 0, WIDTH, HEIGHT);
-        name=new JTextField("Name");
-        path=new JTextField("Path");
+        JTextField name = new JTextField("Name");
+        JTextField path = new JTextField("Path");
         name.setBounds(10,10,WIDTH-20,20);
         path.setBounds(10,40,WIDTH-20,20);
         jp.add(name);
@@ -64,17 +63,17 @@ public class Archiver extends JFrame {
         });
         add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new actionWindow(instance,1);
+                new ActionWindow(instance,1);
             }
         });
         change.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new actionWindow(instance,2);
+                new ActionWindow(instance,2);
             }
         });
         delete.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new actionWindow(instance,3);
+                new ActionWindow(instance,3);
             }
         });
         jp.add(archive);
