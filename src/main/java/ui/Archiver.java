@@ -13,9 +13,10 @@ import fileHelper.*;
  */
 public class Archiver extends JFrame {
     private final static Logger logger = Logger.getLogger(Archiver.class);
-    private int left, top;
-    private static final int HEIGHT=240,WIDTH=260;
+    int left, top;
+    final int HEIGHT=180,WIDTH=260;
     private JTextField name,path;
+    private Archiver instance = this;
 
     public Archiver(){
         createUI();
@@ -26,7 +27,9 @@ public class Archiver extends JFrame {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         left = (int) screenSize.getWidth();
         top = (int) screenSize.getHeight();
-        setBounds(left - WIDTH - 30, top - 80 - HEIGHT - 20, WIDTH + 10, HEIGHT);
+        left = left - WIDTH - 30;
+        top = top - 80 - HEIGHT - 20;
+        setBounds(left, top, WIDTH + 10, HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
         add(createPanel());
@@ -45,13 +48,33 @@ public class Archiver extends JFrame {
         jp.add(path);
         JButton archive = new JButton("Archive"),add=new JButton("Add"),change=new JButton("Change"),delete=new JButton("Delete"),clear=new JButton("Clear");
         add.setBounds(10,70,70,20);
-        change.setBounds(90,70,70,20);
+        change.setBounds(90,70,80,20);
         delete.setBounds(180,70,70,20);
-        archive.setBounds(10,100,70,20);
-        clear.setBounds(90,100,70,20);
+        archive.setBounds(10,100,WIDTH/2-20,20);
+        clear.setBounds(WIDTH/2+10,100,WIDTH/2-20,20);
         archive.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
+            }
+        });
+        clear.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        add.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new actionWindow(instance,1);
+            }
+        });
+        change.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new actionWindow(instance,2);
+            }
+        });
+        delete.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new actionWindow(instance,3);
             }
         });
         jp.add(archive);
