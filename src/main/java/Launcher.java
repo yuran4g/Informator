@@ -1,5 +1,6 @@
 import fileHelper.Entity;
 import fileHelper.EntityList;
+import osData.Properties;
 import osData.RegsWorker;
 import ui.*;
 
@@ -24,6 +25,7 @@ public class Launcher{
 
 
         RegsWorker.loadRegs();
+        Properties.getInstance().setUserProperties(RegsWorker.getNames());
         if (args.length==0) {
             new Informator();
             new Archiver();

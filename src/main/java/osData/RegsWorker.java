@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 
 
 public final class RegsWorker {
@@ -19,11 +20,33 @@ public final class RegsWorker {
             logger.error("Can not load registry from file registers.json");
         }
     }
-    public static Reg[] getRegs(String name){
+    static Reg[] getRegs(String name){
         for (RegHolder rh : regs) {
             if (rh.Name.equals(name)) return rh.regs;
         }
         return null;
+    }
+
+    static boolean getAllFlag(String name){
+        for (RegHolder rh : regs) {
+            if (rh.Name.equals(name)) return rh.All!=null;
+        }
+        return false;
+    }
+
+    static String getSeparator(String name){
+        for (RegHolder rh : regs) {
+            if (rh.Name.equals(name)) return rh.Separator;
+        }
+        return null;
+    }
+
+    public static ArrayList<String> getNames(){
+        ArrayList<String> ret=new ArrayList<String>();
+        for (RegHolder reg : regs) {
+            ret.add(reg.Name);
+        }
+        return ret;
     }
     public static void saveRegs(String path,Reg[] regs){
         try {

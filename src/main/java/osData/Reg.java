@@ -45,5 +45,6 @@ public class Reg {
 class RegHolder{
     public String Name;
     public Reg[] regs;
+    public String All,Separator;
     public RegHolder(){}
 }

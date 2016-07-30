@@ -9,15 +9,24 @@ import java.util.List;
 /**
  * Created by yksenofontov on 27.07.2016.
  */
-public class EntityList {
+public final class EntityList {
     private final static Logger logger = Logger.getLogger(EntityList.class);
-    private List<Entity> entities = new ArrayList<Entity>();
+    private static List<Entity> entities = new ArrayList<Entity>();
 
-    public List<Entity> getEntities() {
+    private EntityList(){}
+
+    public static List<Entity> getEntities() {
         return entities;
     }
 
-    public void addEntity(String name, String link) throws Exception {
+    public static Entity getEntity(String name){
+        for (Entity e:entities){
+            if (e.getName().equals(name))return e;
+        }
+        return null;
+    }
+
+    public static void addEntity(String name, String link) throws Exception {
         File file = new File(link);
         if (file.exists()) {
             entities.add(new Entity(name, link));
@@ -27,12 +36,12 @@ public class EntityList {
         logger.info("New entity successfully added.");
     }
 
-    public void removeEntity(Entity ent) {
+    public static void removeEntity(Entity ent) {
         entities.remove(ent);
         logger.info("Entity successfully removed.");
     }
 
-    public void updateEntity(Entity ent, String newName, String newLink) throws Exception {
+    public static void updateEntity(Entity ent, String newName, String newLink) throws Exception {
         File file = new File(newLink);
         if (file.exists()) {
             int index = entities.indexOf(ent);
