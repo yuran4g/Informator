@@ -10,15 +10,17 @@ public class Launcher{
     public static void main(String[] args) throws Exception{
 //        initialization
 //        add/update/delete examples
-        /*EntityList entityList = new EntityList();
-        entityList.addEntity("name1","d:\\11\11");
-        entityList.addEntity("name2","d:\\22");
-        entityList.addEntity("name3","d:\\33");
-        entityList.addEntity("name4","d:\\4");
-        Entity testEntity = entityList.getEntities().get(1);
-        entityList.updateEntity(testEntity,"newName","newLink");
-        Entity testEntity2 = entityList.getEntities().get(2);
-        entityList.removeEntity(testEntity2);*/
+        EntityList entityList = new EntityList();
+        entityList.addEntity("name1","c:\\2\\123 321\\Новый текстовый документ.txt");
+        entityList.addEntity("name2","c:\\2\\123 321");
+        Entity entity = entityList.getEntities().get(0);
+        String path = entity.archive();
+//        that path should be opened at windows explorer
+
+
+//        Entity entity2 = entityList.getEntities().get(1);
+//        entity2.clean();
+//        entityList.removeEntity(testEntity2);
 
 
         RegsWorker.loadRegs();

@@ -1,5 +1,6 @@
 package fileHelper;
 
+import Util.FileZip;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -33,14 +34,17 @@ public class Entity {
         Link = link;
     }
 
-    public void archive() throws Exception {
+    public String archive() throws Exception {
+        String path = FileZip.zipEntity(Link);
         logger.info("Entity successfully archived");
+        return path;
     }
 
     public void clean() throws Exception {
         File file = new File(Link);
         if (file.isFile() && file.exists()) {
             file.delete();
+            logger.info("Entity successfully cleaned");
         } else {
             if (file.isDirectory() && file.exists()) {
                 deleteFolder(file);
