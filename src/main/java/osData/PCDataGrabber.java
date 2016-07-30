@@ -41,28 +41,19 @@ public class PCDataGrabber {
 
     public void grabData(ArrayList<String> params) {
         HashMap<String,String> result = new HashMap<String,String>();
-        String data = "";
+        String data;
         for (String param : params) {
-            if (param.equals("OS")) {
-                data = System.getProperty("os.name");
-            }
             if (param.equals("Java")){
                 data = System.getProperty("java.version");
             }
-            if (param.equals("IE")){
-                data = getRegistryValue(param);
+            else if (param.equals("User")) {
+                data = System.getProperty("user.name");
             }
-            if (param.equals("Chrome")){
-                data = getRegistryValue(param);
-            }
-            if (param.equals("Firefox")){
-                data = getRegistryValue(param);
-            }
-            if (param.equals("NET")){
+            else if (param.equals(".NET")){
                 data = getNETVersion();
             }
-            if (param.equals("User")){
-                data = System.getProperty("user.name");
+            else{
+                data = getRegistryValue(param);
             }
             if (!data.equals("")) result.put(param,param+" : " + data + "\n");
         }
@@ -103,7 +94,7 @@ public class PCDataGrabber {
 
     private String getRegistryValue(String name) {
         Reg[] rs = RegsWorker.getRegs(name);
-        String ret = findValues(rs);
+        String ret = findValues(rs,RegsWorker.getAllFlag(name),RegsWorker.getSeparator(name));
         if (ret.equals(""))logger.info("Can not find "+name+" version");
         return ret;
     }
@@ -126,7 +117,8 @@ public class PCDataGrabber {
         return result;
     }
 
-    private String findValues(Reg[] regs){
+    private String findValues(Reg[] regs, boolean all,String separator){
+        String final_value = "";
         for(Reg r:regs) {
             try {
                 ProcessBuilder builder = new ProcessBuilder("reg", "query", r.getPath(), "/v", r.getKey());
@@ -142,17 +134,16 @@ public class PCDataGrabber {
                     a=ret.get(n).split("[\\s]{4}");
                 List<String> list = new ArrayList<String>(Arrays.asList(a));
                 list.removeAll(Arrays.asList("", null));
-                String final_value = "";
                 for (int i = 2; i < list.size(); ) {
                     final_value = final_value + list.get(i);
                     i = i + 1;
                 }
-                return final_value;
+                if (!all) break;
+                else final_value+=separator;
             } catch (Exception e) {
                 logger.info("Can not find " + r.getPath() + " " + r.getKey()+"\n");
             }
         }
-        return "";
+        return final_value;
     }
-
 }

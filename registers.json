@@ -1,4 +1,22 @@
 [
+  {"Name":"OS","All":"true","Separator":" ","regs":
+  [
+    {
+      "path":"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion",
+      "key":"ProductName"
+    },
+    {
+      "path":"HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment",
+      "key":"PROCESSOR_ARCHITECTURE"
+    }
+  ]
+  },
+  {
+    "Name":"User"
+  },
+  {
+    "Name":"Java"
+  },
   {"Name":"Firefox","regs":
   [
     {

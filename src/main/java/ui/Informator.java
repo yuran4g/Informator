@@ -25,13 +25,13 @@ public class Informator extends JFrame {
 
     public Informator() {
         createUI();
-        params = new ArrayList<String>(Properties.allProperties);
+        params = new ArrayList<String>(Properties.getInstance().getUserProperties());
         initMenu();
         Thread thread = new Thread(new Runnable() {
             public void run() {
                 while (true) {
                     logger.debug("Start grabbing OS data");
-                    PCDataGrabber.getInstance().grabData(Properties.allProperties);
+                    PCDataGrabber.getInstance().grabData(Properties.getInstance().getUserProperties());
                     logger.debug("OS data successfully grabbed");
                     ready = true;
                     Check();
@@ -48,8 +48,8 @@ public class Informator extends JFrame {
     }
 
     public Informator(String[] args){
-        PCDataGrabber.getInstance().grabData(Properties.allProperties);
-        params = new ArrayList<String>(Properties.allProperties);
+        PCDataGrabber.getInstance().grabData(Properties.getInstance().getUserProperties());
+        params = new ArrayList<String>(Properties.getInstance().getUserProperties());
         SaveToFile(args[0]);
     }
 
@@ -88,27 +88,31 @@ public class Informator extends JFrame {
 
     private void initMenu(){
         menu = new JPopupMenu();
-        JMenuItem menuItem;
+        menu = addMenuItems(menu,Properties.getInstance().getUserProperties());
+        JMenuItem exit = new JMenuItem("Exit");
+        exit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                logger.debug("Close program"); System.exit(0);
+            }
+        });
+        menu.add(exit);
+    }
+
+    private JPopupMenu addMenuItems(JPopupMenu menu,ArrayList<String> params){
         JCheckBoxMenuItem cbMenuItem;
-        for (String pr : Properties.allProperties) {
+        for (String pr : params) {
             cbMenuItem = new JCheckBoxMenuItem(pr);
             cbMenuItem.setSelected(true);
             cbMenuItem.addActionListener(new CBActionListener());
             cbMenuItem.setUI(new StayOpenCheckBoxMenuItemUI());
             menu.add(cbMenuItem);
         }
-        menuItem = new JMenuItem("Exit");
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                logger.debug("Close program"); System.exit(0);
-            }
-        });
-        menu.add(menuItem);
+        return menu;
     }
 
     private static void Check(){
-        for (String s:Properties.allProperties){
-            JCheckBoxMenuItem curr = ((JCheckBoxMenuItem)(menu.getSubElements()[Properties.allProperties.indexOf(s)]));
+        for (String s:Properties.getInstance().getUserProperties()){
+            JCheckBoxMenuItem curr = ((JCheckBoxMenuItem)(menu.getSubElements()[Properties.getInstance().getUserProperties().indexOf(s)]));
             if (PCDataGrabber.Contains(s)) {
                 curr.setEnabled(true);
             }
@@ -160,7 +164,6 @@ public class Informator extends JFrame {
         private void hideTooltip(){ToolTipManager.sharedInstance().setEnabled(false);}
 
         public void mouseClicked(MouseEvent e) {
-            ///1-left,3-right
             if (e.getButton() == 1) {
                 if (!ready) return;
                 String grabbedData = PCDataGrabber.getGrabbedData(params);
@@ -186,7 +189,7 @@ public class Informator extends JFrame {
         }
     }
 
-    public void SaveToFile(String Path){
+    private void SaveToFile(String Path){
         String Data = PCDataGrabber.getGrabbedData(params);
         try {
             PrintWriter writer = new PrintWriter(Path);
