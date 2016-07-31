@@ -15,9 +15,8 @@ public class Launcher{
     public static void main(String[] args) throws Exception{
 //        initialization
 //        add/update/delete examples
-        /*EntityList.addEntity("name1","c:\\2\\123 321\\Новый текстовый документ.txt");
-        EntityList.addEntity("name2","c:\\2\\123 321");
-        Entity entity = EntityList.getEntities().get(0);
+        EntityList.addEntity("log","application.log");
+        /*Entity entity = EntityList.getEntities().get(0);
         String path = entity.archive();*/
 //        that path should be opened at windows explorer
 

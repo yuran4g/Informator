@@ -1,5 +1,6 @@
 package ui;
 
+import fileHelper.Entity;
 import fileHelper.EntityList;
 import org.apache.log4j.Logger;
 
@@ -16,9 +17,10 @@ class ActionWindow extends JDialog{
         createUI(parent);
     }
     private final int HEIGHT=180,WIDTH=260;
-    private JTextField name,path,oldName;
+    private JTextField name,path;
     private JButton ok;
     private JPanel panel;
+    private String changeName;
 
     private static Logger logger = Logger.getLogger(ActionWindow.class);
 
@@ -28,12 +30,24 @@ class ActionWindow extends JDialog{
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
         add(createPanel());
+        setModal(true);
     }
 
-    void Show(char type){
-        setType(type);
-        this.setModal(true);
+    void ShowAdd(){
+        setType('a');
         setVisible(true);
+    }
+
+    void ShowChange(Entity e){
+        setType('c');
+        changeName=e.getName();
+        setTextBoxValues(e);
+        setVisible(true);
+    }
+
+    private void setTextBoxValues(Entity e){
+        name.setText(e.getName());
+        path.setText(e.getLink());
     }
 
     private JPanel initTextField(JPanel panel){
@@ -43,9 +57,6 @@ class ActionWindow extends JDialog{
         path = new JTextField("Path");
         path.setBounds(10, 70, WIDTH - 20, 20);
         panel.add(path);
-        oldName = new JTextField("OldName");
-        oldName.setBounds(10, 40, WIDTH - 20, 20);
-        panel.add(oldName);
         return panel;
     }
     private JPanel createPanel(){
@@ -68,21 +79,14 @@ class ActionWindow extends JDialog{
 
     private void setType(char type){
         reset();
+        name.setVisible(true);
+        path.setVisible(true);
         switch (type){
             case 'a':
-                name.setVisible(true);
-                path.setVisible(true);
                 ok.addActionListener(new AddAction());
                 break;
             case 'c':
-                name.setVisible(true);
-                path.setVisible(true);
-                oldName.setVisible(true);
                 ok.addActionListener(new ChangeAction());
-                break;
-            case 'r':
-                name.setVisible(true);
-                ok.addActionListener(new RemoveAction());
                 break;
         }
     }
@@ -97,14 +101,7 @@ class ActionWindow extends JDialog{
     }
     private class ChangeAction implements ActionListener{
         public void actionPerformed(ActionEvent e){
-            try{EntityList.updateEntity(EntityList.getEntity(oldName.getText()),name.getText(),path.getText());}
-            catch (Exception ex){logger.error(ex);}
-            setVisible(false);
-        }
-    }
-    private class RemoveAction implements ActionListener{
-        public void actionPerformed(ActionEvent e){
-            try{EntityList.removeEntity(EntityList.getEntity(name.getText()));}
+            try{EntityList.updateEntity(EntityList.getEntity(changeName),name.getText(),path.getText());}
             catch (Exception ex){logger.error(ex);}
             setVisible(false);
         }
