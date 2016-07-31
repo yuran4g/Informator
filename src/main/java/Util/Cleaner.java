@@ -11,10 +11,6 @@ public final class Cleaner {
 
     public static void Delete(String Path) {
         File f=new File(Path);
-        delete(f);
-    }
-
-    private static void delete(File f) {
         if (f.isDirectory()){
             deleteDir(f);
         }
@@ -24,7 +20,7 @@ public final class Cleaner {
     private static void deleteDir(File f) {
         for (File file:f.listFiles()){
             if (file.isDirectory()){
-                deleteDir(file);
+                deleteDir(file.getAbsoluteFile());
             }
             file.delete();
         }
