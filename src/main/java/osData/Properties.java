@@ -1,8 +1,6 @@
 package osData;
 
-import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by yksenofontov on 08.07.2016.

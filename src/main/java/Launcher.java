@@ -25,13 +25,13 @@ public class Launcher{
 //        Entity entity2 = entityList.getEntities().get(1);
 //        entity2.clean();
 //        entityList.removeEntity(testEntity2);
-        //FileZip.zipEntity("resources");
-        //Zipper.Zip("resources","test");
+        /*FileZip.zipEntity("resources");
+        Zipper.Zip("resources","test");
         ZipPack zp = new ZipPack();
         zp.setPackDirectoryPath("src");
         zp.packDirectory();
-        //zp.setPackFilePath("registers.json");
-        //zp.packFile();
+        zp.setPackFilePath("registers.json");
+        zp.packFile();*/
         RegsWorker.loadRegs();
         Properties.getInstance().setUserProperties(RegsWorker.getNames());
         if (args.length==0) {
