@@ -1,9 +1,11 @@
 package fileHelper;
 
 import Util.FileZip;
+import Util.ZipPack;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by yksenofontov on 27.07.2016.
@@ -34,10 +36,19 @@ public class Entity {
         Link = link;
     }
 
-    public String archive() throws Exception {
-        String path = FileZip.zipEntity(Link);
+    public String archive() throws IOException{
+        String archivePath;
+        ZipPack zp = new ZipPack();
+        String path = getLink();
+        if (new File(path).isDirectory()) {
+            zp.setPackDirectoryPath(path);
+                archivePath = zp.packDirectory();
+        } else {
+            zp.setPackFilePath(path);
+            archivePath = zp.packFile();
+        }
         logger.info("Entity successfully archived");
-        return path;
+        return archivePath;
     }
 
     public void clean() throws Exception {

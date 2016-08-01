@@ -51,4 +51,12 @@ public final class EntityList {
             throw new Exception("Path doesn't exist");
         }
     }
+
+    public static void saveEntity(){
+//        implement save to file
+    }
+
+    public static void loadEntity(){
+//        implement load from file
+    }
 }

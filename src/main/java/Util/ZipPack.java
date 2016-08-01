@@ -1,9 +1,12 @@
 package Util;
 
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -12,6 +15,8 @@ import java.util.zip.ZipOutputStream;
  */
 public class ZipPack {
 
+    private final static Logger logger = Logger.getLogger(FileZip.class);
+    private final static String ARCHIVEFILE = "logs.zip";
     // Paths to file and directory that you want to pack
     private String packFilePath;
     private String packDirectoryPath;
@@ -20,11 +25,11 @@ public class ZipPack {
      * Pack single file.
      * @throws IOException
      */
-    public void packFile() throws IOException {
+    public String packFile() throws IOException {
         // Create the ZIP output file
         // File name is the same as the packed file
         // but the extension is changed
-        String outputFile = packFilePath + ".zip";
+        String outputFile = generatePath()+"\\"+ARCHIVEFILE;
 
         // Open the output stream to the destination file
         FileOutputStream fos = new FileOutputStream(outputFile);
@@ -53,15 +58,16 @@ public class ZipPack {
         zos.closeEntry();
         zos.close();
         fos.close();
+        return outputFile;
     }
 
     /**
      * Packs the given directory.
      * @throws IOException
      */
-    public void packDirectory() throws IOException {
+    public String packDirectory() throws IOException {
         // The output zip file name
-        String outputFile = packDirectoryPath + ".zip";
+        String outputFile = generatePath()+"\\"+ARCHIVEFILE;
 
         // Open streams to write the ZIP contents to
         FileOutputStream fos = new FileOutputStream(outputFile);
@@ -74,6 +80,7 @@ public class ZipPack {
         zos.closeEntry();
         zos.close();
         fos.close();
+        return outputFile;
     }
 
     /**
@@ -143,5 +150,14 @@ public class ZipPack {
      **/
     public void setPackDirectoryPath(String packDirectoryPath) {
         this.packDirectoryPath = packDirectoryPath;
+    }
+
+    private static String generatePath() {
+        Random rand = new Random();
+        Integer value = rand.nextInt(1000000);
+        String genPath = System.getProperty("user.dir") + "\\TEMP\\" + value.toString();
+        File file = new File(genPath);
+        file.mkdir();
+        return genPath;
     }
 }
