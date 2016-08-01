@@ -30,6 +30,9 @@ public class ZipPack {
         // File name is the same as the packed file
         // but the extension is changed
         String outputFile = generatePath()+"\\"+ARCHIVEFILE;
+        String path=outputFile.replaceAll("\\\\[^\\\\]*zip$","");
+        new File(path).mkdirs();
+        new File(ARCHIVEFILE).createNewFile();
 
         // Open the output stream to the destination file
         FileOutputStream fos = new FileOutputStream(outputFile);
