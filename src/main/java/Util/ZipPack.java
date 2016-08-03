@@ -29,9 +29,8 @@ public class ZipPack {
         // Create the ZIP output file
         // File name is the same as the packed file
         // but the extension is changed
+        logger.info("Start pack " + packFilePath);
         String outputFile = generatePath()+"\\"+ARCHIVEFILE;
-        String path=outputFile.replaceAll("\\\\[^\\\\]*zip$","");
-        new File(path).mkdirs();
         new File(ARCHIVEFILE).createNewFile();
 
         // Open the output stream to the destination file
@@ -61,6 +60,7 @@ public class ZipPack {
         zos.closeEntry();
         zos.close();
         fos.close();
+        logger.info("Pack successfully finished");
         return outputFile;
     }
 
@@ -71,7 +71,7 @@ public class ZipPack {
     public String packDirectory() throws IOException {
         // The output zip file name
         String outputFile = generatePath()+"\\"+ARCHIVEFILE;
-
+        logger.info("Start pack " + packDirectoryPath);
         // Open streams to write the ZIP contents to
         FileOutputStream fos = new FileOutputStream(outputFile);
         ZipOutputStream zos = new ZipOutputStream(fos);
@@ -83,6 +83,7 @@ public class ZipPack {
         zos.closeEntry();
         zos.close();
         fos.close();
+        logger.info("Pack successfully finished");
         return outputFile;
     }
 
@@ -93,7 +94,8 @@ public class ZipPack {
      * @throws IOException
      */
     private void packCurrentDirectoryContents(String directoryPath, ZipOutputStream zos) throws IOException {
-
+        directoryPath=directoryPath.replaceAll("[\\\\/]$","");
+        packDirectoryPath=packDirectoryPath.replaceAll("[\\\\/]$","");
         File dir = new File(directoryPath);
         String[] dirElements = dir.list();
 
@@ -118,7 +120,7 @@ public class ZipPack {
                 // For files add the a ZIP entry
                 // THIS IS IMPORTANT: a ZIP entry needs to be a relative path to the file
                 // so we cut off the path to the directory that is being packed.
-                ZipEntry ze= new ZipEntry(dirElementPath.replaceAll(packDirectoryPath+"/", ""));
+                ZipEntry ze= new ZipEntry(dirElementPath.replace(packDirectoryPath+"/", ""));
                 zos.putNextEntry(ze);
 
                 // Open input stream to packed file
@@ -158,9 +160,14 @@ public class ZipPack {
     private static String generatePath() {
         Random rand = new Random();
         Integer value = rand.nextInt(1000000);
-        String genPath = System.getProperty("user.dir") + "\\TEMP\\" + value.toString();
+        String tempDir = System.getProperty("user.dir") + "\\TEMP";
+        if (!new File(tempDir).exists()) {
+            new File(tempDir).mkdir();
+        }
+        String genPath = tempDir + "\\" + value.toString();
         File file = new File(genPath);
         file.mkdir();
+        logger.info("New folder generated " + genPath);
         return genPath;
     }
 }

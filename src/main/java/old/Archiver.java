@@ -1,7 +1,8 @@
-package ui;
+/*package old;
 
 import fileHelper.EntityList;
 import org.apache.log4j.Logger;
+import ui.ActionWindow;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -12,9 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-/**
- * Created by Андрей on 27.07.2016.
- */
 public class Archiver extends JFrame {
     private final static Logger logger = Logger.getLogger(Archiver.class);
     int left, top;
@@ -25,7 +23,7 @@ public class Archiver extends JFrame {
 
     public Archiver() {
         createUI();
-        dialogWindow = new ActionWindow(this);
+        //dialogWindow = new ActionWindow(this);
     }
 
     private void createUI() {
@@ -176,3 +174,4 @@ public class Archiver extends JFrame {
         }
     }
 }
+*/

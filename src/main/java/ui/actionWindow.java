@@ -13,32 +13,21 @@ import java.awt.event.ActionListener;
  * Created by Андрей on 28.07.2016.
  */
 class ActionWindow extends JDialog{
-    ActionWindow(Archiver parent){
-        createUI(parent);
+    ActionWindow(){
+        createUI();
     }
-    ActionWindow(NewArchiver parent){
-        createUI(parent);
-    }
-    private final int HEIGHT=180,WIDTH=260;
+    private final int HEIGHT=150,WIDTH=260;
     private JTextField name,path;
     private JButton ok;
     private JPanel panel;
     private String changeName;
+    private Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
 
     private static Logger logger = Logger.getLogger(ActionWindow.class);
 
-    private void createUI(Archiver parent) {
+    private void createUI() {
         setLayout(null);
-        setBounds(parent.left+10,parent.top+10,WIDTH+10,HEIGHT);
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setAlwaysOnTop(true);
-        add(createPanel());
-        setModal(true);
-    }
-
-    private void createUI(NewArchiver parent) {
-        setLayout(null);
-        setBounds(parent.left+10,parent.top+10,WIDTH+10,HEIGHT);
+        setBounds((screenSize.width-WIDTH+10)/2,(screenSize.height-HEIGHT)/2,WIDTH+10,HEIGHT);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
         add(createPanel());
@@ -67,7 +56,7 @@ class ActionWindow extends JDialog{
         name.setBounds(10, 10, WIDTH - 20, 20);
         panel.add(name);
         path = new JTextField("Path");
-        path.setBounds(10, 70, WIDTH - 20, 20);
+        path.setBounds(10, 40, WIDTH - 20, 20);
         panel.add(path);
         return panel;
     }
