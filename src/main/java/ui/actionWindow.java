@@ -16,6 +16,9 @@ class ActionWindow extends JDialog{
     ActionWindow(Archiver parent){
         createUI(parent);
     }
+    ActionWindow(NewArchiver parent){
+        createUI(parent);
+    }
     private final int HEIGHT=180,WIDTH=260;
     private JTextField name,path;
     private JButton ok;
@@ -25,6 +28,15 @@ class ActionWindow extends JDialog{
     private static Logger logger = Logger.getLogger(ActionWindow.class);
 
     private void createUI(Archiver parent) {
+        setLayout(null);
+        setBounds(parent.left+10,parent.top+10,WIDTH+10,HEIGHT);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setAlwaysOnTop(true);
+        add(createPanel());
+        setModal(true);
+    }
+
+    private void createUI(NewArchiver parent) {
         setLayout(null);
         setBounds(parent.left+10,parent.top+10,WIDTH+10,HEIGHT);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

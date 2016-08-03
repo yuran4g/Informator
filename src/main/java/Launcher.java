@@ -14,6 +14,7 @@ public class Launcher{
     public static void main(String[] args) throws Exception{
 //        initialization
 //        add/update/delete examples
+        EntityList.loadEntity();
         EntityList.addEntity("log","application.log");
         /*Entity entity = EntityList.getEntities().get(0);
         String path = entity.archive();*/
@@ -34,7 +35,7 @@ public class Launcher{
         Properties.getInstance().setUserProperties(RegsWorker.getNames());
         if (args.length==0) {
             new Informator();
-            new Archiver();
+            new NewArchiver();
         }
         else
             new Informator(args);
