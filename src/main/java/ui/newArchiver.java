@@ -20,7 +20,7 @@ public class NewArchiver extends JFrame {
     int left, top;
     private int dy, dx;
     private final int WIDTH = 260;
-    private ActionWindow dialogWindow = new ActionWindow(this);
+    private ActionWindow dialogWindow = new ActionWindow();
     private final static Logger logger = Logger.getLogger(NewArchiver.class);
     private JPanel mainPanel;
     private Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
@@ -107,7 +107,7 @@ public class NewArchiver extends JFrame {
         String name,path;
         JPanel container;
         JLabel text,remove,change,clean,archive;
-        final String[] icons={"delete.png","modify.png","clear.png","archive.png"};// add resources\
+        final String[] icons={"clear.png","modify.png","clean.png","archive.png"};// add resources\
         Row(String Name, String Path, int Number){
             name=Name;
             path=Path;
@@ -176,6 +176,7 @@ public class NewArchiver extends JFrame {
                     EntityList.removeEntity(EntityList.getEntities().get(number));
                     updatePanel();
                 } catch (Exception ex) {
+                    logger.error("Can't remove entity: ",ex);
                 }
             }
 
@@ -192,6 +193,7 @@ public class NewArchiver extends JFrame {
                     try {
                         Thread.currentThread().wait(100);
                     } catch (InterruptedException ex) {
+                        logger.error("Can't change entity: ",ex);
                     }
                 }
                 updatePanel();
@@ -208,7 +210,7 @@ public class NewArchiver extends JFrame {
                 try {
                     EntityList.getEntities().get(number).clean();
                 } catch (Exception ex) {
-                    logger.error(ex);
+                    logger.error("Can't clean entity: ",ex);
                 }
             }
 
@@ -243,7 +245,7 @@ public class NewArchiver extends JFrame {
                 try {
                     Thread.currentThread().wait(100);
                 } catch (InterruptedException ex) {
-                    logger.error(ex);
+                    logger.error("Can't add entity: ",ex);
                 }
             }
             updatePanel();
