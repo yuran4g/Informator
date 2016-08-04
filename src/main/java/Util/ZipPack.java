@@ -101,7 +101,7 @@ public class ZipPack {
         // Add empty folder
         if ( dirElements.length == 0 && dir.isDirectory() )
         {
-            ZipEntry ze= new ZipEntry(directoryPath.replaceAll(packDirectoryPath+"/", "") + "/");
+            ZipEntry ze= new ZipEntry(directoryPath.replace(packDirectoryPath+"/", "") + "/");
             zos.putNextEntry(ze);
         }
 
@@ -119,7 +119,7 @@ public class ZipPack {
                 // For files add the a ZIP entry
                 // THIS IS IMPORTANT: a ZIP entry needs to be a relative path to the file
                 // so we cut off the path to the directory that is being packed.
-                ZipEntry ze= new ZipEntry(dirElementPath.replaceAll(packDirectoryPath+"/", ""));
+                ZipEntry ze= new ZipEntry(dirElementPath.replace(packDirectoryPath+"/", ""));
                 zos.putNextEntry(ze);
 
                 // Open input stream to packed file

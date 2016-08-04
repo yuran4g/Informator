@@ -2,7 +2,10 @@ package fileHelper;
 
 import org.apache.log4j.Logger;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +15,7 @@ import java.util.List;
 public final class EntityList {
     private final static Logger logger = Logger.getLogger(EntityList.class);
     private static List<Entity> entities = new ArrayList<Entity>();
+    private static String ENTITYFILE = "entityList.txt";
 
     private EntityList(){}
 
@@ -27,12 +31,7 @@ public final class EntityList {
     }
 
     public static void addEntity(String name, String link) throws Exception {
-        File file = new File(link);
-        if (file.exists()) {
-            entities.add(new Entity(name, link));
-        } else {
-            throw new Exception("Path doesn't exist");
-        }
+        entities.add(new Entity(name, link));
         logger.info("New entity successfully added.");
     }
 
@@ -52,11 +51,22 @@ public final class EntityList {
         }
     }
 
-    public static void saveEntity(){
-//        implement save to file
+    public static void saveEntityList() throws Exception{
+        FileWriter writer = new FileWriter(ENTITYFILE);
+        for(Entity entity: EntityList.getEntities()) {
+            writer.write(entity.getName()+";"+entity.getLink()+"\n");
+        }
+        writer.close();
+        logger.info("Entitylist successfully saved");
     }
 
-    public static void loadEntity(){
-//        implement load from file
+    public static void loadEntityList() throws Exception{
+        BufferedReader reader = new BufferedReader(new FileReader(ENTITYFILE));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            addEntity(line.split(";")[0],line.split(";")[1]);
+        }
+        reader.close();
+        logger.info("Entitylist successfully loaded");
     }
 }
