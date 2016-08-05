@@ -4,7 +4,6 @@ import fileHelper.EntityList;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -17,8 +16,7 @@ public class NewArchiver extends JFrame {
     private LinkedList<Row> rows = new LinkedList<Row>();
     private NewArchiver instance = this;
     private boolean pressed;
-    int left, top;
-    private int dy, dx;
+    private int dy, dx, left, top;
     private final int WIDTH = 260;
     private ActionWindow dialogWindow = new ActionWindow();
     private final static Logger logger = Logger.getLogger(NewArchiver.class);
@@ -99,6 +97,10 @@ public class NewArchiver extends JFrame {
         add.setVisible(true);
         add.addMouseListener(new addMouseListener());
         return add;
+    }
+
+    private void showMessageBox(String s){
+        JOptionPane.showMessageDialog(this,s,"Error",JOptionPane.ERROR_MESSAGE);
     }
 
     private class Row {
@@ -209,11 +211,16 @@ public class NewArchiver extends JFrame {
 
         private class clearMouseListener implements MouseListener{
             public void mouseClicked(MouseEvent e) {
-                try {
-                    EntityList.getEntities().get(number).clean();
-                } catch (Exception ex) {
-                    logger.error("Can't clean entity: ",ex);
-                }
+                new Thread(new Runnable() {
+                    public void run() {
+                        try {
+                            EntityList.getEntities().get(number).clean();
+                        } catch (Exception ex) {
+                            logger.error("Can't clean entity: ", ex);
+                            showMessageBox("Can't clean path");
+                        }
+                    }
+                }).start();
             }
 
             public void mousePressed(MouseEvent e) {}
@@ -224,13 +231,18 @@ public class NewArchiver extends JFrame {
 
         private class archiveMouseListener implements MouseListener{
             public void mouseClicked(MouseEvent e) {
-                String path = EntityList.getEntities().get(number).getLink();
-                try {
-                    String pathToArchive = EntityList.getEntities().get(number).archive();
-                    Runtime.getRuntime().exec("explorer "+pathToArchive.replaceAll("\\\\[^\\\\]*zip$", ""));
-                } catch (IOException e1) {
-                    logger.error("Can not archive path = " + path);
-                }
+                new Thread(new Runnable() {
+                    public void run() {
+                        String path = EntityList.getEntities().get(number).getLink();
+                        try {
+                            String pathToArchive = EntityList.getEntities().get(number).archive();
+                            Runtime.getRuntime().exec("explorer "+pathToArchive.replaceAll("\\\\[^\\\\]*zip$", ""));
+                        } catch (IOException ex) {
+                            logger.error("Can not archive path = " + path);
+                            showMessageBox("Can not archive path");
+                        }
+                    }
+                }).start();
             }
 
             public void mousePressed(MouseEvent e) {}
@@ -247,7 +259,7 @@ public class NewArchiver extends JFrame {
                 try {
                     Thread.currentThread().wait(100);
                 } catch (InterruptedException ex) {
-                    logger.error("Can't add entity: ",ex);
+                    logger.error("Can't add entity: "+ex.getMessage());
                 }
             }
             updatePanel();

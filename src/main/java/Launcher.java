@@ -1,11 +1,7 @@
-import Util.ZipPack;
-import fileHelper.Entity;
 import fileHelper.EntityList;
 import osData.Properties;
 import osData.RegsWorker;
 import ui.*;
-
-import java.util.zip.ZipFile;
 
 /**
  * Created by yksenofontov on 08.07.2016.
