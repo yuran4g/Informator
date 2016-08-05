@@ -109,7 +109,7 @@ public class NewArchiver extends JFrame {
         String name,path;
         JPanel container;
         JLabel text,remove,change,clean,archive;
-        final String[] icons={"clear.png","modify.png","clean.png","archive.png"};// add resources\
+        final String[] icons={"delete.png","modify.png","clear.png","archive.png"};// add resources\
         Row(String Name, String Path, int Number){
             name=Name;
             path=Path;
