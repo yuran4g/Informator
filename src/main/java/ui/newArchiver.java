@@ -152,14 +152,16 @@ public class NewArchiver extends JFrame {
 
         private void setBounds(){
             int top=HEIGHT-TextAndIconSize-MARGIN;
-            remove.setSize(TextAndIconSize,TextAndIconSize);
-            change.setSize(TextAndIconSize,TextAndIconSize);
-            clean.setSize(TextAndIconSize,TextAndIconSize);
             archive.setSize(TextAndIconSize,TextAndIconSize);
-            change.setLocation(WIDTH-TextAndIconSize*4-MARGIN*4,top);
-            remove.setLocation(WIDTH-TextAndIconSize*3-MARGIN*3,top);
-            archive.setLocation(WIDTH-TextAndIconSize*2-MARGIN*2,top);
-            clean.setLocation(WIDTH-TextAndIconSize-MARGIN,top);
+            clean.setSize(TextAndIconSize,TextAndIconSize);
+            change.setSize(TextAndIconSize,TextAndIconSize);
+            remove.setSize(TextAndIconSize,TextAndIconSize);
+
+
+            archive.setLocation(WIDTH-TextAndIconSize*4-MARGIN*4,top);
+            clean.setLocation(WIDTH-TextAndIconSize*3-MARGIN*3,top);
+            change.setLocation(WIDTH-TextAndIconSize*2-MARGIN*2,top);
+            remove.setLocation(WIDTH-TextAndIconSize-MARGIN,top);
             text.setBounds(MARGIN,MARGIN,WIDTH-TextAndIconSize*4-MARGIN*6,TextAndIconSize);
         }
 
@@ -259,7 +261,12 @@ public class NewArchiver extends JFrame {
 
     private class exitMouseListener implements MouseListener{
         public void mouseClicked(MouseEvent e) {
-            EntityList.saveEntity();
+            try {
+                EntityList.saveEntityList();
+            } catch (Exception e1) {
+                logger.error("Can not save entityList");
+                logger.error(e1.getMessage());
+            }
             instance.dispatchEvent(new WindowEvent(instance, WindowEvent.WINDOW_CLOSING));
         }
 
