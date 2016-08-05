@@ -23,9 +23,9 @@ public final class EntityList {
         return entities;
     }
 
-    public static Entity getEntity(String name){
-        for (Entity e:entities){
-            if (e.getName().equals(name))return e;
+    public static Entity getEntity(String name) {
+        for (Entity e : entities) {
+            if (e.getName().equals(name)) return e;
         }
         return null;
     }
@@ -41,30 +41,25 @@ public final class EntityList {
     }
 
     public static void updateEntity(Entity ent, String newName, String newLink) throws Exception {
-        File file = new File(newLink);
-        if (file.exists()) {
-            int index = entities.indexOf(ent);
-            entities.set(index, new Entity(newName, newLink));
-            logger.info("Entity successfully updated.");
-        } else {
-            throw new Exception("Path doesn't exist");
-        }
+        int index = entities.indexOf(ent);
+        entities.set(index, new Entity(newName, newLink));
+        logger.info("Entity successfully updated.");
     }
 
-    public static void saveEntityList() throws Exception{
+    public static void saveEntityList() throws Exception {
         FileWriter writer = new FileWriter(ENTITYFILE);
-        for(Entity entity: EntityList.getEntities()) {
-            writer.write(entity.getName()+";"+entity.getLink()+"\n");
+        for (Entity entity : EntityList.getEntities()) {
+            writer.write(entity.getName() + ";" + entity.getLink() + "\n");
         }
         writer.close();
         logger.info("Entitylist successfully saved");
     }
 
-    public static void loadEntityList() throws Exception{
+    public static void loadEntityList() throws Exception {
         BufferedReader reader = new BufferedReader(new FileReader(ENTITYFILE));
         String line;
         while ((line = reader.readLine()) != null) {
-            addEntity(line.split(";")[0],line.split(";")[1]);
+            addEntity(line.split(";")[0], line.split(";")[1]);
         }
         reader.close();
         logger.info("Entitylist successfully loaded");

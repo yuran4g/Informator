@@ -32,6 +32,14 @@ public class Entity {
         return Link;
     }
 
+    private String getAbsoluteLink() {
+        if (getLink().contains("%USERPROFILE%")){
+           return getLink().replace("%USERPROFILE%",System.getProperty("user.home"));
+        }else {
+            return Link;
+        }
+    }
+
     public void setLink(String link) {
         Link = link;
     }
@@ -39,7 +47,7 @@ public class Entity {
     public String archive() throws IOException{
         String archivePath;
         ZipPack zp = new ZipPack();
-        String path = getLink();
+        String path = getAbsoluteLink();
         if (new File(path).isDirectory()) {
             zp.setPackDirectoryPath(path);
                 archivePath = zp.packDirectory();
@@ -52,8 +60,8 @@ public class Entity {
     }
 
     public void clean() throws Exception {
-        File file = new File(Link);
-        logger.info("Start to clean " + Link);
+        File file = new File(getAbsoluteLink());
+        logger.info("Start to clean " + getAbsoluteLink());
         if (file.exists()){
             if (file.isFile()){
                 file.delete();
@@ -62,7 +70,7 @@ public class Entity {
             }
         }
         if (file.exists()){
-            throw new Exception("Can not delete " + Link);
+            throw new Exception("Can not delete " + getAbsoluteLink());
         }else {
             logger.info("Entity successfully cleaned");
         }
