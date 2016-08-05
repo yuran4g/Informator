@@ -53,15 +53,17 @@ public class Entity {
 
     public void clean() throws Exception {
         File file = new File(Link);
-        if (file.isFile() && file.exists()) {
-            file.delete();
-            logger.info("Entity successfully cleaned");
-        } else {
-            if (file.isDirectory() && file.exists()) {
+        logger.info("Start to clean " + Link);
+        if (file.exists()){
+            if (file.isFile()){
+                file.delete();
+            }else{
                 deleteFolder(file);
-            } else {
-                throw new Exception("Can not find file/dir");
             }
+        }
+        if (file.exists()){
+            throw new Exception("Can not delete " + Link);
+        }else {
             logger.info("Entity successfully cleaned");
         }
     }
