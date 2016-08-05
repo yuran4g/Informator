@@ -60,6 +60,7 @@ class ActionWindow extends JDialog{
         panel.add(path);
         return panel;
     }
+
     private JPanel createPanel(){
         panel = new JPanel(null);
         panel.setBounds(0, 0, WIDTH, HEIGHT);
@@ -73,9 +74,8 @@ class ActionWindow extends JDialog{
         for (Component c: panel.getComponents())
             c.setVisible(false);
         ok.setVisible(true);
-        for (ActionListener al:ok.getActionListeners()){
+        for (ActionListener al:ok.getActionListeners())
             ok.removeActionListener(al);
-        }
     }
 
     private void setType(char type){
@@ -92,18 +92,29 @@ class ActionWindow extends JDialog{
         }
     }
 
+    private void showMessageBox(String s){
+        JOptionPane.showMessageDialog(this,s,"Error",JOptionPane.ERROR_MESSAGE);
+    }
+
     private class AddAction implements ActionListener{
         public void actionPerformed(ActionEvent e){
             try{EntityList.addEntity(name.getText(),path.getText());}
-            catch (Exception ex){logger.error(ex);}
+            catch (Exception ex){
+                logger.error(ex);
+                showMessageBox(ex.toString());
+            }
             setVisible(false);
             //instance.dispatchEvent(new WindowEvent(instance, WindowEvent.WINDOW_CLOSING));
         }
     }
+
     private class ChangeAction implements ActionListener{
         public void actionPerformed(ActionEvent e){
             try{EntityList.updateEntity(EntityList.getEntity(changeName),name.getText(),path.getText());}
-            catch (Exception ex){logger.error(ex);}
+            catch (Exception ex){
+                logger.error(ex);
+                showMessageBox(ex.toString());
+            }
             setVisible(false);
         }
     }
