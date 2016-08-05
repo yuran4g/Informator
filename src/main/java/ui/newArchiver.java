@@ -268,7 +268,12 @@ public class NewArchiver extends JFrame {
 
     private class exitMouseListener implements MouseListener{
         public void mouseClicked(MouseEvent e) {
-            EntityList.saveEntity();
+            try {
+                EntityList.saveEntityList();
+            }
+            catch (Exception ex){
+                logger.error(ex);
+            }
             instance.dispatchEvent(new WindowEvent(instance, WindowEvent.WINDOW_CLOSING));
         }
 
