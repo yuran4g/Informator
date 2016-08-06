@@ -76,7 +76,7 @@ public class Entity {
         }
     }
 
-    private void deleteFolder(File folder) {
+    public static void deleteFolder(File folder) {
         File[] files = folder.listFiles();
         if(files!=null) {
             for(File f: files) {

@@ -15,7 +15,7 @@ import java.util.List;
 public final class EntityList {
     private final static Logger logger = Logger.getLogger(EntityList.class);
     private static List<Entity> entities = new ArrayList<Entity>();
-    private static String ENTITYFILE = "entityList.txt";
+    public final static String ENTITYFILE = "entityList.txt";
 
     private EntityList(){}
 

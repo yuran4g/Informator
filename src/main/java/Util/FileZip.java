@@ -58,7 +58,7 @@ public class FileZip {
         } catch (FileNotFoundException e) {
             logger.error("File can not be found");
         } catch (IOException e) {
-            logger.error("Can not saev file to archive");
+            logger.error("Can not save file to archive");
         }
         return zipPath;
     }

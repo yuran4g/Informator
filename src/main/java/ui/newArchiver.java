@@ -1,11 +1,14 @@
 package ui;
 
+import Util.Settings;
+import fileHelper.Entity;
 import fileHelper.EntityList;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 
@@ -13,8 +16,8 @@ import java.util.LinkedList;
  * Created by Андрей on 03.08.2016.
  */
 public class NewArchiver extends JFrame {
-    private LinkedList<Row> rows = new LinkedList<Row>();
-    private NewArchiver instance = this;
+    private final LinkedList<Row> rows = new LinkedList<Row>();
+    private final NewArchiver instance = this;
     private boolean pressed;
     private int dy, dx, left, top;
     private final int WIDTH = 260;
@@ -44,30 +47,42 @@ public class NewArchiver extends JFrame {
         JPanel dataPanel = createDataPanel();
         main.add(createExitButton());
         main.add(createAddButton());
+        main.add(createSettingsButton());
         main.add(dataPanel);
-        main.setSize(WIDTH, dataPanel.getHeight()+Row.TextAndIconSize/2);
+        main.setSize(WIDTH, dataPanel.getHeight()+Row.TextAndIconSize);
         main.setVisible(true);
         main.addMouseListener(new MyMouseListener());
         main.addMouseMotionListener(new MyMouseMotionAdapter());
         return main;
     }
 
-    private JPanel createDataPanel() {
-        JPanel ret = new JPanel(null);
+    private void fillRows(){
         rows.clear();
         for (int i = 0; i < EntityList.getEntities().size(); i++)
             rows.add(new Row(EntityList.getEntities().get(i).getName(),EntityList.getEntities().get(i).getLink(),i));
+    }
+
+    private JPanel[] getRowsPanels(){
         int top=5,left=5;
-        for (Row r:rows){
-            JPanel element = r.getPanel();
-            element.setLocation(left,top);
-            ret.add(element);
+        JPanel[] ret = new JPanel[rows.size()];
+        for (int i=0;i<rows.size();i++){
+            ret[i]=rows.get(i).getPanel();
+            ret[i].setLocation(left,top);
+            ret[i].setVisible(true);
             top+=Row.HEIGHT;
         }
+        return ret;
+    }
+
+    private JPanel createDataPanel() {
+        JPanel ret = new JPanel(null);
+        fillRows();
+        for (JPanel rowPanel:getRowsPanels())
+            ret.add(rowPanel);
         for (Component c: ret.getComponents())
             c.setVisible(true);
         ret.setVisible(true);
-        ret.setSize(WIDTH,top+5);
+        ret.setSize(WIDTH,Row.HEIGHT*rows.size()+10);
         ret.setLocation(0,Row.TextAndIconSize/2);
         return ret;
     }
@@ -99,6 +114,14 @@ public class NewArchiver extends JFrame {
         return add;
     }
 
+    private JLabel createSettingsButton(){
+        JLabel settings = new JLabel(new ImageIcon(new ImageIcon("resources//settings.png").getImage().getScaledInstance(Row.TextAndIconSize, Row.TextAndIconSize, java.awt.Image.SCALE_SMOOTH)));
+        settings.setBounds(0,Row.HEIGHT*rows.size()+Row.TextAndIconSize/2,Row.TextAndIconSize,Row.TextAndIconSize);
+        settings.setVisible(true);
+        settings.addMouseListener(new settingsMouseListener());
+        return settings;
+    }
+
     private void showMessageBox(String s){
         JOptionPane.showMessageDialog(this,s,"Error",JOptionPane.ERROR_MESSAGE);
     }
@@ -109,7 +132,7 @@ public class NewArchiver extends JFrame {
         String name,path;
         JPanel container;
         JLabel text,remove,change,clean,archive;
-        final String[] icons={"clear.png","modify.png","clean.png","archive.png"};// add resources\
+        final String[] icons={"delete.png","modify.png","clear.png","archive.png"};// add resources\
         Row(String Name, String Path, int Number){
             name=Name;
             path=Path;
@@ -138,7 +161,6 @@ public class NewArchiver extends JFrame {
         private void initLabels(){
             text=new JLabel();
             text.setVerticalTextPosition(SwingConstants.CENTER);
-            //text.setFont(new Font(null,0,TextAndIconSize*10));
             remove=new JLabel(scaledIcon("resources\\"+icons[0]));
             change=new JLabel(scaledIcon("resources\\"+icons[1]));
             clean=new JLabel(scaledIcon("resources\\"+icons[2]));
@@ -214,10 +236,14 @@ public class NewArchiver extends JFrame {
                 new Thread(new Runnable() {
                     public void run() {
                         try {
+                            clean.setEnabled(false);
                             EntityList.getEntities().get(number).clean();
                         } catch (Exception ex) {
                             logger.error("Can't clean entity: ", ex);
                             showMessageBox("Can't clean path");
+                        }
+                        finally {
+                            clean.setEnabled(true);
                         }
                     }
                 }).start();
@@ -235,11 +261,15 @@ public class NewArchiver extends JFrame {
                     public void run() {
                         String path = EntityList.getEntities().get(number).getLink();
                         try {
+                            archive.setEnabled(false);
                             String pathToArchive = EntityList.getEntities().get(number).archive();
                             Runtime.getRuntime().exec("explorer "+pathToArchive.replaceAll("\\\\[^\\\\]*zip$", ""));
                         } catch (IOException ex) {
                             logger.error("Can not archive path = " + path);
                             showMessageBox("Can not archive path");
+                        }
+                        finally {
+                            archive.setEnabled(true);
                         }
                     }
                 }).start();
@@ -274,12 +304,35 @@ public class NewArchiver extends JFrame {
     private class exitMouseListener implements MouseListener{
         public void mouseClicked(MouseEvent e) {
             try {
-                EntityList.saveEntityList();
+                if (Settings.getSaveEntityOnClose())
+                    EntityList.saveEntityList();
+                else{
+                    Entity.deleteFolder(new File(EntityList.ENTITYFILE));
+                }
             } catch (Exception e1) {
                 logger.error("Can not save entityList");
                 logger.error(e1.getMessage());
             }
+            try {
+                if (Settings.getDeleteTempFolderOnClose())
+                    Entity.deleteFolder(new File("TEMP"));
+            } catch (Exception e2) {
+                logger.error("Can not delete temp folder");
+                logger.error(e2.getMessage());
+            }
+            Settings.SaveSettings();
             instance.dispatchEvent(new WindowEvent(instance, WindowEvent.WINDOW_CLOSING));
+        }
+
+        public void mousePressed(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {}
+    }
+
+    private class settingsMouseListener implements MouseListener {
+        public void mouseClicked(MouseEvent e) {
+            new SettingWindow();
         }
 
         public void mousePressed(MouseEvent e) {}

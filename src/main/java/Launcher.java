@@ -1,3 +1,4 @@
+import Util.Settings;
 import fileHelper.EntityList;
 import osData.Properties;
 import osData.RegsWorker;
@@ -32,6 +33,7 @@ public class Launcher{
         zp.setPackFilePath("registers.json");
         zp.packFile();*/
         RegsWorker.loadRegs();
+        Settings.LoadSettings();
         Properties.getInstance().setUserProperties(RegsWorker.getNames());
         if (args.length==0) {
             new Informator();

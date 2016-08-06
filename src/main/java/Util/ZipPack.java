@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
@@ -21,6 +22,7 @@ public class ZipPack {
     // Paths to file and directory that you want to pack
     private String packFilePath;
     private String packDirectoryPath;
+    private static int CompressionLevel=Deflater.NO_COMPRESSION;
 
     /**
      * Pack single file.
@@ -42,7 +44,7 @@ public class ZipPack {
         ZipOutputStream zos = new ZipOutputStream(fos);
         //zos.setLevel(Deflater.BEST_COMPRESSION);//1.06
         //zos.setLevel(Deflater.BEST_SPEED);//0.17
-        zos.setLevel(Deflater.NO_COMPRESSION);//0.14
+        zos.setLevel(CompressionLevel);//0.14
 
         // Create a zip entry conatining packed file name
         ZipEntry ze = new ZipEntry(new File(packFilePath).getName());
@@ -174,5 +176,18 @@ public class ZipPack {
         file.mkdir();
         logger.info("New folder generated " + genPath);
         return genPath;
+    }
+
+    public static boolean setCompressionLevel(int level){
+        int[] levels={-1,0,1,9};//default,no compression,best speed,best compression
+        if (Arrays.binarySearch(levels,level)!=-1){
+            CompressionLevel=level;
+            return true;
+        }
+        return false;
+    }
+
+    public static int getCompressionLevel(){
+        return CompressionLevel;
     }
 }
