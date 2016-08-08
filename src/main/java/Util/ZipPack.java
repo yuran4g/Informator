@@ -22,7 +22,7 @@ public class ZipPack {
     // Paths to file and directory that you want to pack
     private String packFilePath;
     private String packDirectoryPath;
-    private static int CompressionLevel=Deflater.NO_COMPRESSION;
+    private static int CompressionLevel=Deflater.DEFAULT_COMPRESSION;
 
     /**
      * Pack single file.

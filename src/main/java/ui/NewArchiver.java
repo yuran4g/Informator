@@ -82,7 +82,10 @@ public class NewArchiver extends JFrame {
         for (Component c: ret.getComponents())
             c.setVisible(true);
         ret.setVisible(true);
-        ret.setSize(WIDTH,Row.HEIGHT*rows.size()+10);
+        if (rows.size()>0)
+            ret.setSize(WIDTH,Row.HEIGHT*rows.size()+10);
+        else
+            ret.setSize(WIDTH,30);
         ret.setLocation(0,Row.TextAndIconSize/2);
         return ret;
     }
@@ -116,7 +119,10 @@ public class NewArchiver extends JFrame {
 
     private JLabel createSettingsButton(){
         JLabel settings = new JLabel(new ImageIcon(new ImageIcon("resources//settings.png").getImage().getScaledInstance(Row.TextAndIconSize, Row.TextAndIconSize, java.awt.Image.SCALE_SMOOTH)));
-        settings.setBounds(0,Row.HEIGHT*rows.size()+Row.TextAndIconSize/2,Row.TextAndIconSize,Row.TextAndIconSize);
+        if (rows.size()>0)
+            settings.setBounds(0,Row.HEIGHT*rows.size()+Row.TextAndIconSize/2,Row.TextAndIconSize,Row.TextAndIconSize);
+        else
+            settings.setBounds(0,20+Row.TextAndIconSize/2,Row.TextAndIconSize,Row.TextAndIconSize);
         settings.setVisible(true);
         settings.addMouseListener(new settingsMouseListener());
         return settings;
@@ -161,6 +167,7 @@ public class NewArchiver extends JFrame {
         private void initLabels(){
             text=new JLabel();
             text.setVerticalTextPosition(SwingConstants.CENTER);
+            text.addMouseListener(new doubleClickMouseListener());
             remove=new JLabel(scaledIcon("resources\\"+icons[0]));
             change=new JLabel(scaledIcon("resources\\"+icons[1]));
             clean=new JLabel(scaledIcon("resources\\"+icons[2]));
@@ -279,6 +286,31 @@ public class NewArchiver extends JFrame {
             public void mouseReleased(MouseEvent e) {}
             public void mouseEntered(MouseEvent e) {}
             public void mouseExited(MouseEvent e) {}
+        }
+
+        private class doubleClickMouseListener implements MouseListener {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2){
+                    try {
+                        Runtime.getRuntime().exec("explorer "+path);
+                    } catch (IOException e1) {
+                        logger.error("Can't open in explorer path: "+path,e1);
+                    }
+                }
+            }
+
+            public void mousePressed(MouseEvent e) {
+
+            }
+            public void mouseReleased(MouseEvent e) {
+
+            }
+            public void mouseEntered(MouseEvent e) {
+
+            }
+            public void mouseExited(MouseEvent e) {
+
+            }
         }
     }
 
