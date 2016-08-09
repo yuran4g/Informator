@@ -35,11 +35,6 @@ public class Launcher{
         RegsWorker.loadRegs();
         Settings.LoadSettings();
         Properties.getInstance().setUserProperties(RegsWorker.getNames());
-        if (args.length==0) {
-            new Informator();
-            new NewArchiver();
-        }
-        else
-            new Informator(args);
+        new NewArchiver();
     }
 }

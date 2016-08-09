@@ -25,6 +25,7 @@ public class NewArchiver extends JFrame {
     private final static Logger logger = Logger.getLogger(NewArchiver.class);
     private JPanel mainPanel;
     private Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
+    private InformatorButton informator;
 
     public NewArchiver(){
         setLayout(null);
@@ -32,7 +33,7 @@ public class NewArchiver extends JFrame {
         add(mainPanel);
         left = (int) screenSize.getWidth() - WIDTH - 30;
         top = (int) screenSize.getHeight() - mainPanel.getHeight() - 30;
-        setLocation(left - 40, top - 80);
+        setLocation(left - 40, top - 40);
         setSize(WIDTH,mainPanel.getHeight());
         setUndecorated(true);
         setBackground(new Color(0, 0, 0, 0));
@@ -48,12 +49,19 @@ public class NewArchiver extends JFrame {
         main.add(createExitButton());
         main.add(createAddButton());
         main.add(createSettingsButton());
+        main.add(createInformatorButton());
         main.add(dataPanel);
         main.setSize(WIDTH, dataPanel.getHeight()+Row.TextAndIconSize);
         main.setVisible(true);
         main.addMouseListener(new MyMouseListener());
         main.addMouseMotionListener(new MyMouseMotionAdapter());
         return main;
+    }
+
+    private JLabel createInformatorButton(){
+        if (informator==null) informator=new InformatorButton(0,rows.size()>0?(Row.HEIGHT*rows.size()+Row.TextAndIconSize/2):(20+Row.TextAndIconSize/2));
+        else informator.setLocation(0,rows.size()>0?(Row.HEIGHT*rows.size()+Row.TextAndIconSize/2):(20+Row.TextAndIconSize/2));
+        return informator;
     }
 
     private void fillRows(){
@@ -120,9 +128,9 @@ public class NewArchiver extends JFrame {
     private JLabel createSettingsButton(){
         JLabel settings = new JLabel(new ImageIcon(new ImageIcon("resources//settings.png").getImage().getScaledInstance(Row.TextAndIconSize, Row.TextAndIconSize, java.awt.Image.SCALE_SMOOTH)));
         if (rows.size()>0)
-            settings.setBounds(0,Row.HEIGHT*rows.size()+Row.TextAndIconSize/2,Row.TextAndIconSize,Row.TextAndIconSize);
+            settings.setBounds(WIDTH-Row.TextAndIconSize,Row.HEIGHT*rows.size()+Row.TextAndIconSize/2,Row.TextAndIconSize,Row.TextAndIconSize);
         else
-            settings.setBounds(0,20+Row.TextAndIconSize/2,Row.TextAndIconSize,Row.TextAndIconSize);
+            settings.setBounds(WIDTH-Row.TextAndIconSize,20+Row.TextAndIconSize/2,Row.TextAndIconSize,Row.TextAndIconSize);
         settings.setVisible(true);
         settings.addMouseListener(new settingsMouseListener());
         return settings;
@@ -132,17 +140,19 @@ public class NewArchiver extends JFrame {
         JOptionPane.showMessageDialog(this,s,"Error",JOptionPane.ERROR_MESSAGE);
     }
 
-    private class Row {
+    class Row {
         static final int HEIGHT = 19, WIDTH = 250, TextAndIconSize=15,MARGIN=(HEIGHT-TextAndIconSize)/2;
         int number;
         String name,path;
         JPanel container;
         JLabel text,remove,change,clean,archive;
         final String[] icons={"delete.png","modify.png","clear.png","archive.png"};// add resources\
-        Row(String Name, String Path, int Number){
-            name=Name;
-            path=Path;
-            number=Number;
+        Row(String Name, String Path, int Number) {
+            name = Name;
+            File f = new File(Path);
+            if (f.isFile()) path = f.getAbsolutePath().replaceAll(f.getName(), "");
+            else path = f.getAbsolutePath();
+            number = Number;
             initLabels();
             createContainer();
         }

@@ -1,4 +1,4 @@
-package ui;
+package Informator;
 
 import org.apache.log4j.Logger;
 import osData.PCDataGrabber;
