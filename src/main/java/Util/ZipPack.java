@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
@@ -176,18 +175,5 @@ public class ZipPack {
         file.mkdir();
         logger.info("New folder generated " + genPath);
         return genPath;
-    }
-
-    public static boolean setCompressionLevel(int level){
-        int[] levels={-1,0,1,9};//default,no compression,best speed,best compression
-        if (Arrays.binarySearch(levels,level)!=-1){
-            CompressionLevel=level;
-            return true;
-        }
-        return false;
-    }
-
-    public static int getCompressionLevel(){
-        return CompressionLevel;
     }
 }

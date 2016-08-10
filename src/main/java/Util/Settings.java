@@ -20,16 +20,13 @@ public final class Settings {
     private static void defaultSettings(){
         setDeleteTempFolderOnClose(false);
         setSaveEntityOnClose(true);
-        setSaveCompressionLevel(true);
     }
 
     public static void SaveSettings(){
         try {
             PrintWriter writer = new PrintWriter(SETTINGS_FILE);
             writer.write("DeleteTempFolderOnClose="+getDeleteTempFolderOnClose()+"\r\n");
-            writer.write("SaveCompressionLevel="+getSaveCompressionLevel()+"\r\n");
             writer.write("SaveEntityOnClose="+getSaveEntityOnClose()+"\r\n");
-            writer.write("CompressionLevel="+ZipPack.getCompressionLevel());
             writer.close();
         }
         catch (Exception e){
@@ -44,9 +41,6 @@ public final class Settings {
                 settings.put(line.split("=")[0],line.split("=")[1]);
             }
             reader.close();
-            if (getSaveCompressionLevel()){
-                ZipPack.setCompressionLevel(Integer.parseInt(settings.get("CompressionLevel")));
-            }
         }
         catch (Exception e){
             logger.error("Can not load settings :",e);
@@ -64,11 +58,5 @@ public final class Settings {
     }
     public static boolean getDeleteTempFolderOnClose(){
         return settings.get("DeleteTempFolderOnClose").equals("true");
-    }
-    public static void setSaveCompressionLevel(boolean flag){
-        settings.put("SaveCompressionLevel",flag?"true":"false");
-    }
-    public static boolean getSaveCompressionLevel(){
-        return settings.get("SaveCompressionLevel").equals("true");
     }
 }
