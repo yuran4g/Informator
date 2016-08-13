@@ -67,7 +67,7 @@ public class NewArchiver extends JFrame {
     private void fillRows(){
         rows.clear();
         for (int i = 0; i < EntityList.getEntities().size(); i++)
-            rows.add(new Row(EntityList.getEntities().get(i).getName(),EntityList.getEntities().get(i).getLink(),i));
+            rows.add(new Row(EntityList.getEntities().get(i).getName(),EntityList.getEntities().get(i).getAbsoluteLink(),i));
     }
 
     private JPanel[] getRowsPanels(){
@@ -303,6 +303,7 @@ public class NewArchiver extends JFrame {
                 if (e.getClickCount() == 2){
                     try {
                         Runtime.getRuntime().exec("explorer "+path);
+                        logger.info("Open path in explorer: "+path);
                     } catch (IOException e1) {
                         logger.error("Can't open in explorer path: "+path,e1);
                     }

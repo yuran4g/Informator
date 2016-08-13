@@ -32,7 +32,7 @@ public class Entity {
         return Link;
     }
 
-    private String getAbsoluteLink() {
+    public String getAbsoluteLink() {
         if (getLink().contains("%USERPROFILE%")){
            return getLink().replace("%USERPROFILE%",System.getProperty("user.home"));
         }else {
