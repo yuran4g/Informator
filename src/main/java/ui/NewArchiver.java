@@ -32,8 +32,8 @@ public class NewArchiver extends JFrame {
         mainPanel=createMainPanel();
         add(mainPanel);
         left = (int) screenSize.getWidth() - WIDTH - 30;
-        top = (int) screenSize.getHeight() - mainPanel.getHeight() - 30;
-        setLocation(left - 40, top - 40);
+        top = (int) screenSize.getHeight() - mainPanel.getHeight() - 50;
+        setLocation(left, top);
         setSize(WIDTH,mainPanel.getHeight());
         setUndecorated(true);
         setBackground(new Color(0, 0, 0, 0));
@@ -101,8 +101,7 @@ public class NewArchiver extends JFrame {
     private void updatePanel(){
         remove(mainPanel);
         mainPanel=createMainPanel();
-        top = (int) screenSize.getHeight() - mainPanel.getHeight() - 30;
-        setLocation(left - 40, top - 80);
+        setLocation(left, top);
         setSize(WIDTH,mainPanel.getHeight());
         add(mainPanel);
         invalidate();
