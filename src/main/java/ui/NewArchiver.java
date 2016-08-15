@@ -26,6 +26,7 @@ public class NewArchiver extends JFrame {
     private JPanel mainPanel;
     private Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
     private InformatorButton informator;
+    private TrayIcon trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().getImage("resources//icon.png"));
 
     public NewArchiver(){
         setLayout(null);
@@ -40,6 +41,9 @@ public class NewArchiver extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
         setVisible(true);
+        Toolkit kit = Toolkit.getDefaultToolkit();
+        Image img = kit.createImage("resources//icon.png");
+        setIconImage(img);
     }
 
     private JPanel createMainPanel(){
@@ -47,6 +51,7 @@ public class NewArchiver extends JFrame {
         main.setBackground(new Color(255,255,255,0));
         JPanel dataPanel = createDataPanel();
         main.add(createExitButton());
+        main.add(createMinimizeButton());
         main.add(createAddButton());
         main.add(createSettingsButton());
         main.add(createInformatorButton());
@@ -115,7 +120,13 @@ public class NewArchiver extends JFrame {
         exit.addMouseListener(new exitMouseListener());
         return exit;
     }
-
+    private JLabel createMinimizeButton(){
+        JLabel minimize = new JLabel(new ImageIcon(new ImageIcon("resources//minimize.png").getImage().getScaledInstance(Row.TextAndIconSize, Row.TextAndIconSize, java.awt.Image.SCALE_SMOOTH)));
+        minimize.setBounds(WIDTH-Row.TextAndIconSize-20,0,Row.TextAndIconSize,Row.TextAndIconSize);
+        minimize.setVisible(true);
+        minimize.addMouseListener(new minimizeMouseListener());
+        return minimize;
+    }
     private JLabel createAddButton(){
         JLabel add = new JLabel(new ImageIcon(new ImageIcon("resources//add.png").getImage().getScaledInstance(Row.TextAndIconSize, Row.TextAndIconSize, java.awt.Image.SCALE_SMOOTH)));
         add.setBounds(0,0,Row.TextAndIconSize,Row.TextAndIconSize);
@@ -364,6 +375,42 @@ public class NewArchiver extends JFrame {
             }
             Settings.SaveSettings();
             instance.dispatchEvent(new WindowEvent(instance, WindowEvent.WINDOW_CLOSING));
+        }
+
+        public void mousePressed(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {}
+    }
+
+    private class minimizeMouseListener implements MouseListener{
+        public void mouseClicked(MouseEvent e) {
+                instance.setExtendedState(JFrame.ICONIFIED);
+                SystemTray tray=SystemTray.getSystemTray();
+                trayIcon.setImageAutoSize(true);
+                trayIcon.addMouseListener(new maximizeMouseListener());
+            try {
+                tray.add(trayIcon);
+                logger.info("Minimize to tray");
+            } catch (AWTException e1) {
+                logger.error("Can not minimize to tray");
+                e1.getLocalizedMessage();
+            }
+        }
+
+        public void mousePressed(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {}
+    }
+
+    private class maximizeMouseListener implements MouseListener{
+        public void mouseClicked(MouseEvent e) {
+            SystemTray tray=SystemTray.getSystemTray();
+            tray.remove(trayIcon);
+            System.out.println("Tray icon removed");
+            instance.setExtendedState(JFrame.NORMAL);
+            instance.setVisible(true);
         }
 
         public void mousePressed(MouseEvent e) {}
